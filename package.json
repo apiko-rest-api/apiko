@@ -1,0 +1,97 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "apiko@^0.1.0",
+        "scope": null,
+        "escapedName": "apiko",
+        "name": "apiko",
+        "rawSpec": "^0.1.0",
+        "spec": ">=0.1.0 <0.2.0",
+        "type": "range"
+      },
+      "C:\\Users\\Veru\\Desktop\\projects\\reporter24\\apiko-start"
+    ]
+  ],
+  "_from": "apiko@>=0.1.0 <0.2.0",
+  "_id": "apiko@0.1.0",
+  "_inCache": true,
+  "_installable": true,
+  "_location": "/apiko",
+  "_nodeVersion": "6.5.0",
+  "_npmOperationalInternal": {
+    "host": "packages-12-west.internal.npmjs.com",
+    "tmp": "tmp/apiko-0.1.0.tgz_1483531361631_0.5230861795134842"
+  },
+  "_npmUser": {
+    "name": "kaspi",
+    "email": "k@e0.cz"
+  },
+  "_npmVersion": "3.10.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "apiko@^0.1.0",
+    "scope": null,
+    "escapedName": "apiko",
+    "name": "apiko",
+    "rawSpec": "^0.1.0",
+    "spec": ">=0.1.0 <0.2.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/apiko/-/apiko-0.1.0.tgz",
+  "_shasum": "13fddfae217c0be2b0acb54ed441bfede2c3bbf8",
+  "_shrinkwrap": null,
+  "_spec": "apiko@^0.1.0",
+  "_where": "C:\\Users\\Veru\\Desktop\\projects\\reporter24\\apiko-start",
+  "author": {
+    "name": "Miroslav Kaspar"
+  },
+  "bugs": {
+    "url": "https://github.com/kasp1/apiko/issues"
+  },
+  "dependencies": {
+    "express": "^4.14.0",
+    "sequelize": "^3.28.0",
+    "mysql": "^2.12.0",
+    "pg": "^6.1.2",
+    "pg-hstore": "^2.3.2",
+    "sqlite3": "^3.1.8",
+    "tedious": "^1.14.0"
+  },
+  "description": "Top Secret",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "13fddfae217c0be2b0acb54ed441bfede2c3bbf8",
+    "tarball": "https://registry.npmjs.org/apiko/-/apiko-0.1.0.tgz"
+  },
+  "gitHead": "ec550eb746783aa58862cd1f579afc4a2ae5b51f",
+  "homepage": "https://github.com/kasp1/apiko#readme",
+  "keywords": [
+    "REST",
+    "API",
+    "server"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "kaspi",
+      "email": "k@e0.cz"
+    }
+  ],
+  "name": "apiko",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kasp1/apiko.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "0.1.0"
+}
