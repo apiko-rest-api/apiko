@@ -7,6 +7,7 @@ module.exports = {
   verbosity: 1,
   prefix: '',
   protect: true,
+  allowedOrigin: '*',
   ws: {
     open: false,
     port: 5001
@@ -22,10 +23,12 @@ module.exports = {
   merge (cfg) {
     g.log(2, 'Merging configs...')
 
-    if ((cfg.verbosity >= 0) && (cfg.verbosity <= 3)) {
-      g.config.verbosity = cfg.verbosity
-    } else {
-      g.log.w(1, 'Configuration property verbosity is supposed to be a number 0 - 3. Going with default:', g.config.verbosity)
+    if (cfg.verbosity) {
+      if ((cfg.verbosity >= 0) && (cfg.verbosity <= 3)) {
+        g.config.verbosity = cfg.verbosity
+      } else {
+        g.log.w(1, 'Configuration property verbosity is supposed to be a number 0 - 3. Going with default:', g.config.verbosity)
+      }
     }
 
     if (cfg.prefix) {
@@ -34,6 +37,10 @@ module.exports = {
       } else {
         g.log.w(1, 'The prefix configuration property should be a string containing only alphanumeric characters (should not contain /). Going with default:', g.config.cfg.prefix)
       }
+    }
+
+    if (cfg.protect === false) {
+      g.config.protect = cfg.protect
     }
 
     if (cfg.port) {

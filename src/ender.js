@@ -73,55 +73,48 @@ module.exports = {
     var method = route[0].toLowerCase()
     route = g.config.prefixed(route[1])
 
-    g.log(3, 'Registering a handler for:', end)
+    g.log(2, 'Registering a handler for:', method.toUpperCase(), route)
 
     g.exApp[method](route, function (req, res, next) {
-      var end = g.ender.ends[end]
-
-      console.log(req.query)
-
       req = extendWithApi(req, res, end, handlerType)
 
       // check args
-      if (end.params) {
-        for (let i in end.params) {
-          if (end.params[i].required && (req.query[i] === undefined)) {
-            g.log.w(3, 'Someone tried to request ', g.ender.ends.indexOf(end), ' with the required parameter "', i,'" missing.')
+      if (g.ender.ends[end].params) {
+        for (let i in g.ender.ends[end].params) {
+          if (g.ender.ends[end].params[i].required && (req.query[i] === undefined)) {
+            g.log.w(3, 'Someone tried to request ', method.toUpperCase(), route, ' with the required parameter "', i,'" missing.')
             req.respondError(400, "The required parameter '" + i + "' is missing in the request.")
           }
 
-          if ((req.query[i] !== undefined) && (end.params[i].regex)) {
-            if (!(new Regex(end.params[i].regex)).test(req.query[i])) {
-              g.log.w(3, 'Someone tried to request ', g.ender.ends.indexOf(end), ' with the parameter "', i,'" having an invalid value.')
+          if ((req.query[i] !== undefined) && (g.ender.ends[end].params[i].regex)) {
+            if (!(new Regex(g.ender.ends[end].params[i].regex)).test(req.query[i])) {
+              g.log.w(3, 'Someone tried to request ', method.toUpperCase(), route, ' with the parameter "', i,'" having an invalid value.')
               req.respondError(400, "The parameter '" + i + "' seems to have an invalid value.")
             }
           }
         }
       }
-      
-      if (end.handlers.core) { // If this end is extendable (and core) and has a core handler, execute the core handler. It will automatically execute the user handler afterwards if it has any if this endpoint is extendable.
-        end.handlers.core(req, g.data.store)
-      } else if (end.handlers.user) { // If this end contains only a user handler, execute it.
-        end.handlers.user(req, g.data.store)
+
+      if (g.ender.ends[end].handlers.core) { // If this end is extendable (and core) and has a core handler, execute the core handler. It will automatically execute the user handler afterwards if it has any if this endpoint is extendable.
+        g.ender.ends[end].handlers.core(req, g.data.store)
+      } else if (g.ender.ends[end].handlers.user) { // If this end contains only a user handler, execute it.
+        g.ender.ends[end].handlers.user(req, g.data.store)
       } else { // if no handler is present, respond with an error.
-        g.log.w(1, 'Someone tried to request ', g.ender.ends.indexOf(end), ' but there is no handler defined for this endpoint.')
+        g.log.w(1, 'Someone tried to request ', method.toUpperCase(), route, ' but there is no handler defined for this endpoint.')
         req.respondError(501)
       }
     })
   },
 
   on (end, callback, params) {
-    var endpoint = this.ends[end]
-
-    if (endpoint) {
-
-      if (!endpoint.handlers) {
+    if (this.ends[end]) {
+      if (!this.ends[end].handlers) {
         g.log(2, 'Extending an existing custom (UI defined) endpoint:', end)
-        endpoint.handlers.user = callback
+        this.ends[end].handlers.user = callback
       } else {
         if (end.extendable) {
           g.log(2, 'Extending an existing core endpoint:', end)
-          endpoint.handlers.user = callback
+          this.ends[end].handlers.user = callback
         } else {
           g.log.e(1, 'You are trying to extend a core endpoint that is not extendable:', end)
         }
@@ -151,9 +144,10 @@ module.exports = {
 
 function extendWithApi (req, res, end, type) {
   req.endpoint = g.ender.ends[end]
+  req.params = req.query
 
   req.respondSuccess = function(data) {
-    if (g.ender.ends[end].extendable && (type == 'core')) {
+    if (g.ender.ends[end].extendable && g.ender.ends[end].handlers.core && g.ender.ends[end].handlers.user && (type == 'core')) {
       this.response = {
         status: 200,
         data: data
@@ -182,7 +176,7 @@ function extendWithApi (req, res, end, type) {
         body.message = customMessage
       }
 
-      if (g.ender.ends[end].handlers.extendable && g.ender.ends[end].handlers.user && (type == 'core')) {
+      if (g.ender.ends[end].extendable && g.ender.ends[end].handlers.core && g.ender.ends[end].handlers.user && (type == 'core')) {
         req.response = {
           status: httpCode,
           data: body
@@ -191,7 +185,7 @@ function extendWithApi (req, res, end, type) {
         res.send(body)
       }
     } else {
-      if (g.ender.ends[end].handlers.extendable && g.ender.ends[end].handlers.user && (type == 'core')) {
+      if (g.ender.ends[end].extendable && g.ender.ends[end].handlers.core && g.ender.ends[end].handlers.user && (type == 'core')) {
         req.response = {status: httpCode}
         g.ender.ends[end].handlers.user(req)
       } else {

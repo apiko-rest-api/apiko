@@ -3,7 +3,7 @@ module.exports = function (request, store) {
     if (request.params.secret == g.manager.setup.secret) {
       request.respondSuccess(g.manager.setup)
     } else {
-      request.respondError(401, 'This server is protected by a secret that has to be supplied in the \'secret\' parameter.', 1)
+      request.respondError(401, 'This server is protected by a secret that has to be supplied as the \'secret\' parameter.', 1)
     }
   } else {
     request.respondSuccess(g.manager.setup)

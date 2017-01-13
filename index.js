@@ -43,6 +43,7 @@ module.exports = {
   run (cfg) {
     g.app = this
     g.exApp = express()
+
     g.exApp.use('/dev', express.static(__dirname + path.sep + 'devui'))
 
     // if anybody wants to serve their web using Apiko instead of using a third party web server
@@ -52,6 +53,12 @@ module.exports = {
     g.config.merge(cfg)
     g.manager.init()
     g.data.init()
+
+    g.exApp.use(function(req, res, next) {
+      res.header('Access-Control-Allow-Origin', g.config.allowedOrigin)
+      res.header('Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept')
+      next()
+    })
 
     this.reload()
   }
