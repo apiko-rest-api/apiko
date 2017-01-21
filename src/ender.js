@@ -1,51 +1,5 @@
 module.exports = {
-  ends: {
-    'GET /users/login': {
-      extendable: true,
-      params: {
-        username: {
-          required: true,
-          regex: '^\\S+\\@\\S+\\.\S+$'
-        },
-        password: {
-          required: true,
-          regex: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$'
-        }
-      },
-      handlers: {
-        core: require('./users/login')
-      },
-      collection: 'users'
-    },
-    'GET /users': {
-      extendable: true,
-      params: {
-        username: {
-          required: true,
-          regex: '^\\S+\\@\\S+\\.\S+$',
-          type: 'STRING 100'
-        },
-        password: {
-          required: true,
-          regex: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}$',
-          type: 'STRING 100'
-        }
-      }
-    },
-    'PUT /apiko/setup': {
-      extendable: false,
-      handlers: {
-        core: require('./setup/put')
-      }
-    },
-    'GET /apiko/setup': {
-      extendable: false,
-      handlers: {
-        core: require('./setup/get')
-      },
-      reservedCustomErrorCodes: [1]
-    }
-  },
+  endpoints: g.core.endpoints,
 
   reload () {
     g.log(2, 'Reloading API endpoints...')
@@ -53,10 +7,23 @@ module.exports = {
     //g.log.d(g.exApp._router.stack)
 
     // first, register all built-in handlers in Express
-    for (let i in this.ends) {
-      if (this.ends[i].handlers) {
-        if (this.ends[i].handlers.core) {
-          this.addHandling(i, 'core')
+    for (let i in this.endpoints) {
+      route = i.split(' ')
+      var method = route[0].toLowerCase()
+      route = g.config.prefixed(route[1])
+      
+      // extend handler arguments with Apiko specific API
+      g.exApp[method](route, g.ender.extendWithApi)
+
+      // stats logging
+      g.exApp[method](route, g.data.logRequest)
+
+      // check whether the predefined params are valid
+      g.exApp[method](route, g.ender.checkAllPredefined)
+    
+      if (this.endpoints[i].handlers) {
+        if (this.endpoints[i].handlers.core) {
+          this.addHandling(i, this.endpoints[i].handlers.core)
         } else {
           g.log.w(0, 'A built-in endpoint handler for', i, 'seems to be missing. This is an internal error, it may affect core functionality.')
         }
@@ -68,55 +35,31 @@ module.exports = {
     g.log(2, 'Endpoints set up.')
   },
 
-  addHandling (end, handlerType) {
+  addHandling (end, handler) {
     route = end.split(' ')
     var method = route[0].toLowerCase()
     route = g.config.prefixed(route[1])
 
     g.log(2, 'Registering a handler for:', method.toUpperCase(), route)
 
-    g.exApp[method](route, function (req, res, next) {
-      req = extendWithApi(req, res, end, handlerType)
-
-      // check args
-      if (g.ender.ends[end].params) {
-        for (let i in g.ender.ends[end].params) {
-          if (g.ender.ends[end].params[i].required && (req.query[i] === undefined)) {
-            g.log.w(3, 'Someone tried to request ', method.toUpperCase(), route, ' with the required parameter "', i,'" missing.')
-            req.respondError(400, "The required parameter '" + i + "' is missing in the request.")
-          }
-
-          if ((req.query[i] !== undefined) && (g.ender.ends[end].params[i].regex)) {
-            if (!(new Regex(g.ender.ends[end].params[i].regex)).test(req.query[i])) {
-              g.log.w(3, 'Someone tried to request ', method.toUpperCase(), route, ' with the parameter "', i,'" having an invalid value.')
-              req.respondError(400, "The parameter '" + i + "' seems to have an invalid value.")
-            }
-          }
-        }
-      }
-
-      if (g.ender.ends[end].handlers.core) { // If this end is extendable (and core) and has a core handler, execute the core handler. It will automatically execute the user handler afterwards if it has any if this endpoint is extendable.
-        g.ender.ends[end].handlers.core(req, g.data.store)
-      } else if (g.ender.ends[end].handlers.user) { // If this end contains only a user handler, execute it.
-        g.ender.ends[end].handlers.user(req, g.data.store)
-      } else { // if no handler is present, respond with an error.
-        g.log.w(1, 'Someone tried to request ', method.toUpperCase(), route, ' but there is no handler defined for this endpoint.')
-        req.respondError(501)
-      }
-    })
+    if (typeof handler == 'string') { // core handlers are paths
+      handler = require(handler)
+    }
+    
+    g.exApp[method](route, handler)
   },
 
   on (end, callback, params) {
-    if (this.ends[end]) {
-      if (!this.ends[end].handlers) {
+    if (this.endpoints[end]) {
+      if (!this.endpoints[end].handlers) {
         g.log(2, 'Extending an existing custom (UI defined) endpoint:', end)
-        this.ends[end].handlers.user = callback
+        this.endpoints[end].handlers.user = callback
       } else {
         if (end.extendable) {
           g.log(2, 'Extending an existing core endpoint:', end)
-          this.ends[end].handlers.user = callback
+          this.endpoints[end].handlers.user = callback
         } else {
-          g.log.e(1, 'You are trying to extend a core endpoint that is not extendable:', end)
+          g.log.e(1, 'You are trying to extend a core endpoint that should not be extended (may affect core functionality):', end)
         }
       }
     } else {
@@ -130,7 +73,7 @@ module.exports = {
         }
       }
 
-      this.ends[end] = {
+      this.endpoints[end] = {
         params: params,
         handlers: {
           user: callback
@@ -138,61 +81,111 @@ module.exports = {
       }
     }
 
-    this.addHandling(end, 'user')
-  }
-}
-
-function extendWithApi (req, res, end, type) {
-  req.endpoint = g.ender.ends[end]
-  req.params = req.query
-
-  req.respondSuccess = function(data) {
-    if (g.ender.ends[end].extendable && g.ender.ends[end].handlers.core && g.ender.ends[end].handlers.user && (type == 'core')) {
-      this.response = {
-        status: 200,
-        data: data
+    this.addHandling(end)
+  },
+  
+  checkAllPredefined (req, res, next) {
+    var problem = false
+    
+    if (req.endpoint.params) {
+      for (let i in req.endpoint.params) {
+        if (req.endpoint.params[i].required && ((req.all[i] === undefined) || (req.all[i] === '')) ) {
+          res.error(400, "The " + i + " parameter is required, but undefined or empty.", 1)
+          problem = true
+        }
+        
+        if (req.endpoint.params[i].regex) {
+          var regex = new RegExp(req.endpoint.params[i].regex)
+          if (!regex.test(req.all[i])) {
+            res.error(400, "The " + i + " parameter is in an incorrect format (no regex match).", 2)
+            problem = true
+          }
+        }
       }
-    } else {
+    }
+    
+    if (!problem) {
+      next()
+    }
+  },
+  
+  extendWithApi (req, res, next) {
+    var end = g.ender.endFromReq(req)
+    g.log(2, 'Extending', end, 'with API...')
+    
+    req.endpoint = g.ender.endpoints[end]
+    req.all = JSON.parse(JSON.stringify(req.query)) // { ...req.params, ...req.query, ...req,body }
+    
+    // merge all request properties in req.params and req.query or req.body, favor req.body to req.query and req.params to others
+    for (var i in req.body) {
+      req.all[i] = req.body[i]
+    }
+    
+    for (var i in req.params) {
+      req.all[i] = req.params[i]
+    }
+
+    res.success = function(data) {
       res.status(200)
       res.send(data)
     }
-  }
 
-  req.respondError = function(httpCode, customMessage, customCode) {
-    if (!httpCode) {
-      httpCode = 400
-    }
-
-    res.status(httpCode)
-
-    if (customMessage || customCode) {
-      var body = {}
-
-      if (customCode) {
-        body.code = customCode
+    res.error = function(httpCode, customMessage, customCode) {
+      if (!httpCode) {
+        httpCode = 400
       }
 
-      if (customMessage) {
-        body.message = customMessage
-      }
+      res.status(httpCode)
 
-      if (g.ender.ends[end].extendable && g.ender.ends[end].handlers.core && g.ender.ends[end].handlers.user && (type == 'core')) {
-        req.response = {
-          status: httpCode,
-          data: body
+      if (customMessage || customCode) {
+        var body = {}
+
+        if (customCode) {
+          body.code = customCode
         }
-      } else {
+
+        if (customMessage) {
+          body.message = customMessage
+        }
+
         res.send(body)
-      }
-    } else {
-      if (g.ender.ends[end].extendable && g.ender.ends[end].handlers.core && g.ender.ends[end].handlers.user && (type == 'core')) {
-        req.response = {status: httpCode}
-        g.ender.ends[end].handlers.user(req)
       } else {
         res.send()
       }
     }
-  }
 
-  return req
-} 
+    res.setError = function(httpCode, customMessage, customCode) {
+      if (!httpCode) {
+        httpCode = 400
+      }
+
+      res.status(httpCode)
+
+      var body = ''
+      if (customMessage || customCode) {
+
+        if (customCode) {
+          body.code = customCode
+        }
+
+        if (customMessage) {
+          body.message = customMessage
+        }
+      }
+      
+      return body
+    }
+
+    next()
+  },
+  
+  endFromReq (req) {
+    var end = (req.method.toUpperCase() + ' ' + req.route.path)
+    
+    if (g.config.prefix) {
+      end = end.replace('/' + g.config.prefix, '')
+    }
+    
+    return end
+  }
+}

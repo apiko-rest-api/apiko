@@ -1,3 +1,3 @@
 module.exports = function (req, res, next) {
-  res.success('Yeppers!')
+  res.success('Not implemented.')
 }

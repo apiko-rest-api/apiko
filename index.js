@@ -1,11 +1,13 @@
 "use strict"
 global.g = global // sneaky hack to shorten global.something to g.something
 
+var bcrypt = require('bcryptjs')
 var http = require('http')
 g.Sequelize = require('sequelize')
 g.express = require('express')
 var path = require('path')
 
+g.core = require('./src/core')
 g.config = require('./src/config')
 g.log = require('./src/log')
 g.ender = require('./src/ender')
@@ -56,10 +58,15 @@ module.exports = {
 
     g.exApp.use(function(req, res, next) {
       res.header('Access-Control-Allow-Origin', g.config.allowedOrigin)
-      res.header('Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept')
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, CHECKOUT, COPY, HEAD, LOCK, MERGE, MKACTIVITY, MKCOL, MOVE, M-SEARCH, NOTIFY, OPTIONS, PATCH, PURGE, REPORT, SEARCH, SUBSCRIBE, TRACE, UNLOCK, UNSUBSCRIBE')
       next()
     })
 
     this.reload()
+  },
+  
+  hashPassword (password) {
+    return bcrypt.hashSync(password, 8)
   }
 }
