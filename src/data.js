@@ -1,8 +1,9 @@
-var bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs')
+const deepmerge = require('deepmerge')
 
 module.exports = {
   store: null,
-  collections: g.core.collections,
+  collections: null,
 
   init () {
     g.log(2, 'Connecting database...')
@@ -28,7 +29,7 @@ module.exports = {
     g.log(2, 'Synchronizing database...')
     var promises = []
 
-    // very core collections (not overridable)
+    // very core collections (not even public)
     var statsP = this.addCollection('stats', {
       id: { type: 'INTEGER' },
       endpoint: { type: 'STRING 255' },
@@ -38,24 +39,29 @@ module.exports = {
 
     statsP.then(() => {
       g.log(3, 'Stats structure synchronized.')
+    }).catch(error => {
+      g.log.w(2, 'Structure sync error (stats):', error)
     })
 
     promises.push(statsP)
+    
+    // merge user and core collections into one object, override user collections with core collections
+    this.collections = deepmerge.all([g.manager.setup.collections, g.core.collections])
 
-    // core collections
+    // create models for the merged collections
 
-    var coreP
+    var publicP
     for (let i in this.collections) {
-      coreP = this.addCollection(i, this.collections[i])
+      publicP = this.addCollection(i, this.collections[i])
 
-      coreP.then(() => {
+      publicP.then(() => {
         g.log(3, 'Structure of ', i,' synchronized.')
+      }).catch(error => {
+        g.log.w(2, 'Structure sync error (', i, '):', error)
       })
 
-      promises.push(coreP)
+      promises.push(publicP)
     }
-
-    // load collections from g.manager.setup.collections here and sync them
 
     return Promise.all(promises)
   },

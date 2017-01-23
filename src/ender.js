@@ -1,12 +1,18 @@
+const deepmerge = require('deepmerge')
+const path = require('path')
+
 module.exports = {
   endpoints: g.core.endpoints,
 
   reload () {
     g.log(2, 'Reloading API endpoints...')
+    
+    // merge generic, core and user endpoints, override: generic <- core <- user
+    this.endpoints = deepmerge.all([this.genericCollectionEndpoints(), g.core.endpoints, g.manager.setup.endpoints])
 
     //g.log.d(g.exApp._router.stack)
 
-    // first, register all built-in handlers in Express
+    // register all endpoint handlers
     for (let i in this.endpoints) {
       route = i.split(' ')
       var method = route[0].toLowerCase()
@@ -22,14 +28,31 @@ module.exports = {
       g.exApp[method](route, g.ender.checkAllPredefined)
     
       if (this.endpoints[i].handlers) {
-        if (this.endpoints[i].handlers.core) {
-          this.addHandling(i, this.endpoints[i].handlers.core)
+        if (this.endpoints[i].handlers.core || this.endpoints[i].handlers.user) {
+          if (this.endpoints[i].handlers.core) {
+            if (typeof this.endpoints[i].handlers.core === 'string') {
+              this.addHandling(i, require(this.endpoints[i].handlers.core))
+            } else {
+              this.addHandling(i, this.endpoints[i].handlers.core)
+            }
+          }
+          
+          if (this.endpoints[i].handlers.user) {
+            if (typeof this.endpoints[i].handlers.user === 'string') {
+              this.addHandling(i, require(process.cwd() + path.sep + this.endpoints[i].handlers.user))
+            } else {
+              this.addHandling(i, this.endpoints[i].handlers.user)
+            }
+          }
         } else {
-          g.log.w(0, 'A built-in endpoint handler for', i, 'seems to be missing. This is an internal error, it may affect core functionality.')
+          g.log.w(0, 'Endpoint ', i, 'is registered with no handler! (2)')
         }
       } else {
-        g.log.w(0, 'A built-in endpoint handler for', i, 'seems to be missing. This is an internal error, it may affect core functionality.')
+        g.log.w(0, 'Endpoint ', i, 'is registered with no handler! (1)')
       }
+
+      // a checker that eventually sends the response if nothing else in the chain does
+      g.exApp[method](route, g.ender.endIfNotEnded)
     }
     
     g.log(2, 'Endpoints set up.')
@@ -38,26 +61,26 @@ module.exports = {
   addHandling (end, handler) {
     route = end.split(' ')
     var method = route[0].toLowerCase()
+    var unprefixedRoute = route[1]
     route = g.config.prefixed(route[1])
 
-    g.log(2, 'Registering a handler for:', method.toUpperCase(), route)
-
-    if (typeof handler == 'string') { // core handlers are paths
-      handler = require(handler)
-    }
+    g.log(2, 'Registering a handler for:', method.toUpperCase(), unprefixedRoute)
     
     g.exApp[method](route, handler)
   },
 
-  on (end, callback, params) {
+  on (end, handler, params) {
     if (this.endpoints[end]) {
       if (!this.endpoints[end].handlers) {
         g.log(2, 'Extending an existing custom (UI defined) endpoint:', end)
-        this.endpoints[end].handlers.user = callback
+        
+        this.endpoints[end].handlers = {
+          user: handler
+        }
       } else {
         if (end.extendable) {
           g.log(2, 'Extending an existing core endpoint:', end)
-          this.endpoints[end].handlers.user = callback
+          this.endpoints[end].handlers.user = handler
         } else {
           g.log.e(1, 'You are trying to extend a core endpoint that should not be extended (may affect core functionality):', end)
         }
@@ -76,7 +99,7 @@ module.exports = {
       this.endpoints[end] = {
         params: params,
         handlers: {
-          user: callback
+          user: handler
         }
       }
     }
@@ -84,28 +107,55 @@ module.exports = {
     this.addHandling(end)
   },
   
+  genericCollectionEndpoints () {
+    var genericEndpoints = {}
+    for (let i in g.data.collections) {
+      // GET for every collection
+      genericEndpoints['GET /' + i] = {
+        extendable: true,
+        params: {
+          limit: { regex: '^\d+$' },
+          offset: { regex: '^\d+$' },
+          order: { regex: '^[\S ]+$' },
+          group: { regex: '^[\S ]+$' }
+        },
+        handlers: {
+          core: './generic/get'
+        },
+        errors: {
+          6: 'Undefined collection.'
+        }
+      }
+    }
+    
+    return genericEndpoints
+  },
+  
   checkAllPredefined (req, res, next) {
-    var problem = false
+    g.log(2, 'Checking parameters...')
     
     if (req.endpoint.params) {
       for (let i in req.endpoint.params) {
         if (req.endpoint.params[i].required && ((req.all[i] === undefined) || (req.all[i] === '')) ) {
+          g.log.w(3, "The", i, "parameter is required, but undefined or empty.")
           res.error(400, "The " + i + " parameter is required, but undefined or empty.", 1)
-          problem = true
         }
         
-        if (req.endpoint.params[i].regex) {
+        if (req.endpoint.params[i].regex && (req.all[i] !== undefined) && (req.all[i] !== '') && !res.headersSent) {
           var regex = new RegExp(req.endpoint.params[i].regex)
           if (!regex.test(req.all[i])) {
+            g.log.w(3, "The", i, "parameter is in an incorrect format (no regex match): '" + req.all[i] + "' Regex:", regex)
             res.error(400, "The " + i + " parameter is in an incorrect format (no regex match).", 2)
-            problem = true
           }
         }
       }
     }
     
-    if (!problem) {
+    if (!res.headersSent) {
+      g.log(2, 'This request has passed the params check.')
       next()
+    } else {
+      g.log(2, 'This request has not passed the params check.')
     }
   },
   
@@ -114,19 +164,13 @@ module.exports = {
     g.log(2, 'Extending', end, 'with API...')
     
     req.endpoint = g.ender.endpoints[end]
-    req.all = JSON.parse(JSON.stringify(req.query)) // { ...req.params, ...req.query, ...req,body }
     
     // merge all request properties in req.params and req.query or req.body, favor req.body to req.query and req.params to others
-    for (var i in req.body) {
-      req.all[i] = req.body[i]
-    }
-    
-    for (var i in req.params) {
-      req.all[i] = req.params[i]
-    }
+    req.all = deepmerge.all([req.query, req.body, req.params])
 
     res.success = function(data) {
       res.status(200)
+      res.type('application/json')
       res.send(data)
     }
 
@@ -136,6 +180,7 @@ module.exports = {
       }
 
       res.status(httpCode)
+      res.type('application/json')
 
       if (customMessage || customCode) {
         var body = {}
@@ -160,6 +205,7 @@ module.exports = {
       }
 
       res.status(httpCode)
+      res.type('application/json')
 
       var body = ''
       if (customMessage || customCode) {
@@ -177,6 +223,18 @@ module.exports = {
     }
 
     next()
+  },
+  
+  endIfNotEnded (req, res, next) {
+    if (!res.headersSent) {
+      g.log(2, 'Automatically ending the response...')
+      
+      if (res.body) {
+        res.send(res.body)
+      } else {
+        res.end()
+      }
+    }
   },
   
   endFromReq (req) {

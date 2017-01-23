@@ -2,8 +2,7 @@ module.exports = {
   collections: {
     'users': {
       id: {
-        type: 'INTEGER',
-        primaryKey: true
+        type: 'INTEGER'
       },
       username: {
         type: 'STRING 100'
@@ -30,7 +29,7 @@ module.exports = {
     }
   },
   endpoints: {
-    'GET /users/login': {
+    'POST /users/login': {
       extendable: true,
       params: {
         username: {
@@ -45,11 +44,10 @@ module.exports = {
       handlers: {
         core: './users/login'
       },
-      collection: 'users'
-    },
-    'GET /users': {
-      extendable: true,
-      collection: 'users'
+      errors: {
+        6: 'There is no user with this username.',
+        7: 'Incorrect password.'
+      }
     },
     'GET /users/:id': {
       extendable: true,
@@ -59,7 +57,6 @@ module.exports = {
           regex: '^\\d{1,10}$'
         }
       },
-      collection: 'users'
     },
     'POST /users': {
       extendable: true,
@@ -71,12 +68,15 @@ module.exports = {
         password: {
           required: true,
           regex: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,18}$'
+        },
+        name: {
+          required: true,
+          regex: '^[\\s\\w\\.áäčďžéíĺľňóôŕřšťúýžÁÄČĎŽÉÍĹĽŇÓÔŔŘŠŤÚÝŽ]{2,40}$'
         }
       },
       handlers: {
         core: './users/post'
       },
-      collection: 'users',
       errors: {
         5: 'This username is already registered.'
       }

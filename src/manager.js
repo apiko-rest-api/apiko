@@ -43,6 +43,13 @@ module.exports = {
   },
 
   check (content) {
+    if (!content.collections) {
+      content.collections = {}
+    }
+    
+    if (!content.endpoints) {
+      content.endpoints = {}
+    }
 
     // parse setup here maybe?
 
