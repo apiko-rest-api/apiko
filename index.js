@@ -3,11 +3,12 @@ global.g = global // sneaky hack to shorten global.something to g.something
 
 const bcrypt = require('bcryptjs')
 const http = require('http')
-g.Sequelize = require('sequelize')
 g.express = require('express')
 const path = require('path')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const session = require('express-session')
+const FileStore = require('session-file-store')(session)
 
 g.core = require('./src/core')
 g.config = require('./src/config')
@@ -36,8 +37,7 @@ module.exports = {
 
   reload (setup) {
     g.manager.load(setup)
-    g.data.sync()
-    .then(() => {
+    g.data.sync().then(() => {
       g.app.httpClose()
       g.ender.reload()
       g.app.httpListen()
@@ -53,6 +53,12 @@ module.exports = {
     g.exApp.use(bodyParser.urlencoded({ extended: true }))
     
     g.exApp.use('/dev', express.static(__dirname + path.sep + 'devui'))
+    
+    // sessions
+    g.exApp.use(session({
+      store: new FileStore(),
+      secret: 'apikosSecret'
+    }))
 
     // if anybody wants to serve their web using Apiko instead of using a third party web server
     g.exApp.use('/', express.static('www'))

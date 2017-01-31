@@ -23,6 +23,9 @@ module.exports = {
 
       // stats logging
       g.exApp[method](route, g.data.logRequest)
+      
+      // check whether if the client complies with the endpoint restriction
+      g.exApp[method](route, g.ender.checkRestrictions)
 
       // check whether the predefined params are valid
       g.exApp[method](route, g.ender.checkAllPredefined)
@@ -109,6 +112,9 @@ module.exports = {
   
   genericCollectionEndpoints () {
     var genericEndpoints = {}
+    var postParams
+    var putParams
+
     for (let i in g.data.collections) {
       // GET for every collection
       genericEndpoints['GET /' + i] = {
@@ -124,6 +130,79 @@ module.exports = {
         },
         errors: {
           6: 'Undefined collection.'
+        }
+      }
+
+      postParams = {}
+      for (let column in g.data.collections[i]) {
+        if (column !== 'id') {
+          postParams[column] = { required: true }
+        }
+      }
+
+      // POST (create) for every collection
+      genericEndpoints['POST /' + i] = {
+        extendable: true,
+        params: postParams,
+        handlers: {
+          core: './generic/post'
+        },
+        errors: {
+          6: 'Undefined collection.'
+        }
+      }
+
+      // GET a single item by ID for every collection
+      genericEndpoints['GET /' + i + '/:id'] = {
+        extendable: true,
+        params: {
+          id: {
+            required: true,
+            regex: '^\\d{1,10}$'
+          }
+        },
+        handlers: {
+          core: './generic/getone'
+        },
+        errors: {
+          6: 'Undefined collection.',
+          9: 'No such record.'
+        }
+      }
+
+      // PUT (overwrite) a single item by ID for every collection
+      genericEndpoints['PUT /' + i + '/:id'] = {
+        extendable: true,
+        params: {
+          id: {
+            required: true,
+            regex: '^\\d{1,10}$'
+          }
+        },
+        handlers: {
+          core: './generic/put'
+        },
+        errors: {
+          6: 'Undefined collection.',
+          9: 'No such record.'
+        }
+      }
+
+      // DELETE a single item by ID for every collection
+      genericEndpoints['DELETE /' + i + '/:id'] = {
+        extendable: true,
+        params: {
+          id: {
+            required: true,
+            regex: '^\\d{1,10}$'
+          }
+        },
+        handlers: {
+          core: './generic/delete'
+        },
+        errors: {
+          6: 'Undefined collection.',
+          9: 'No such record.'
         }
       }
     }
@@ -223,6 +302,41 @@ module.exports = {
     }
 
     next()
+  },
+  
+  checkRestrictions (req, res, next) {
+    g.log(2, 'Checking restrictions...')
+
+    var end = g.ender.endFromReq(req)
+    console.log(req.session, end)
+    
+    if (end.restrict) {
+      if (!req.session.user) {
+        g.log.w(1, 'This endpoint requires login.')
+        res.error(401, "This endpoint requires login.", 8)
+      }
+      
+      if (end.restrict !== true) {
+        var userRoles = req.session.user.role.split(',')
+
+        var hasOne = false
+        for (let i in end.restrict) {
+          if (userRoles.indexOf(end.restrict[i]) >= 0) {
+            hasOne = true
+          }
+        }
+        
+        if (!hasOne) {
+          g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", end.restrict.join(', '))
+          res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + end.restrict.join(', '), 9)
+        }
+      }
+    }
+    
+    if (!res.headersSent) {
+      g.log(2, 'This request has passed the restrictions check.')
+      next()
+    }
   },
   
   endIfNotEnded (req, res, next) {

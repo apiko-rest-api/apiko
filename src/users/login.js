@@ -4,10 +4,10 @@ module.exports = function (req, res, next) {
   var password = g.app.hashPassword(req.all.password)
   
   g.store.users.findOne({ where: { username: req.all.username }}).then((user) => {
-    g.log(3, 'User:', user)
-    
     if (user) {
       if (bcrypt.compareSync(req.all.password, user.password)) {
+        req.session.user = user
+
         res.status(200)
         res.body = JSON.stringify({
           id: user.id,

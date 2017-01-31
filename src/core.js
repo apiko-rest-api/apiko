@@ -1,7 +1,10 @@
 module.exports = {
   collections: {
-    'users': {
+    users: {
       id: {
+        type: 'INTEGER'
+      },
+      owner: {
         type: 'INTEGER'
       },
       username: {
@@ -15,10 +18,12 @@ module.exports = {
         comment: 'May contain a comma-separated list of roles, e.g.: \'moderator, admin\''
       }
     },
-    'files': {
+    files: {
       id: {
-        type: 'INTEGER',
-        primaryKey: true
+        type: 'INTEGER'
+      },
+      owner: {
+        type: 'INTEGER'
       },
       mime: {
         type: 'STRING 100'
@@ -49,14 +54,9 @@ module.exports = {
         7: 'Incorrect password.'
       }
     },
-    'GET /users/:id': {
+    'GET /users': {
       extendable: true,
-      params: {
-        id: {
-          required: true,
-          regex: '^\\d{1,10}$'
-        }
-      },
+      restrict: true
     },
     'POST /users': {
       extendable: true,

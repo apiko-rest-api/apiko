@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const deepmerge = require('deepmerge')
+const Sequelize = require('sequelize')
 
 module.exports = {
   store: null,
@@ -38,7 +39,7 @@ module.exports = {
     })
 
     statsP.then(() => {
-      g.log(3, 'Stats structure synchronized.')
+      g.log(3, 'Structure of stats synchronized.')
     }).catch(error => {
       g.log.w(2, 'Structure sync error (stats):', error)
     })
@@ -55,9 +56,9 @@ module.exports = {
       publicP = this.addCollection(i, this.collections[i])
 
       publicP.then(() => {
-        g.log(3, 'Structure of ', i,' synchronized.')
+        g.log(2, 'Structure of', i,'synchronized.')
       }).catch(error => {
-        g.log.w(2, 'Structure sync error (', i, '):', error)
+        g.log.w(1, 'Structure sync error (', i, '):', error)
       })
 
       promises.push(publicP)
@@ -71,11 +72,11 @@ module.exports = {
     for (let i in fields) {
       if (fields[i].type.indexOf(' ') >= 0) {
         parts = fields[i].type.split(' ')
-        fields[i].type = g.Sequelize[parts[0]](parts[1])
+        fields[i].type = Sequelize[parts[0]](parts[1])
       } else {
-        fields[i].type = g.Sequelize[fields[i].type]
+        fields[i].type = Sequelize[fields[i].type]
       }
-      
+
       if (i == 'id') {
         fields[i].primaryKey = true
         fields[i].autoIncrement = true
