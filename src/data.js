@@ -47,7 +47,9 @@ module.exports = {
     promises.push(statsP)
     
     // merge user and core collections into one object, override user collections with core collections
-    this.collections = deepmerge.all([g.manager.setup.collections, g.core.collections])
+    this.collections = deepmerge.all([
+      JSON.parse(JSON.stringify(g.manager.setup.collections)), JSON.parse(JSON.stringify(g.core.collections))
+    ])
 
     // create models for the merged collections
 
@@ -93,10 +95,18 @@ module.exports = {
   logRequest (req, res, next) {
     g.log(3, 'Logging a request...')
     
+    var uid = 0
+    
+    if (req.session) {
+      if (req.session.user) {
+        uid = req.req.session.user.id
+      }
+    }
+    
     g.data.store.models.stats.create({
       endpoint: g.ender.endFromReq(req), 
       ip: (req.headers['x-forwarded-for'] || req.connection.remoteAddress),
-      uid: 0
+      uid: uid
     })
     next()
   },

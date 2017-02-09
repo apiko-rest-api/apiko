@@ -18,8 +18,14 @@ g.manager = require('./src/manager')
 g.data = require('./src/data')
 
 module.exports = {
-  on (route, callback, params) {
-    ender.on(route, callback)
+  customEnds: [],
+  
+  on (route, handler, params) {
+    this.customEnds.push({
+      route: route,
+      handler: handler,
+      params: params
+    })
   },
 
   httpListen () {
@@ -40,8 +46,21 @@ module.exports = {
     g.data.sync().then(() => {
       g.app.httpClose()
       g.ender.reload()
+      g.app.loaded()
       g.app.httpListen()
     })
+  },
+  
+  loaded () {
+    g.log(2, 'Adding custom endpoint handlers...')
+    
+    for (let i in this.customEnds) {
+      if (this.customEnds[i].params) {
+        g.ender.on(this.customEnds[i].route, this.customEnds[i].handler, this.customEnds[i].params)
+      } else {
+        g.ender.on(this.customEnds[i].route, this.customEnds[i].handler)
+      }
+    }
   },
 
   run (cfg) {
@@ -72,6 +91,8 @@ module.exports = {
     g.store = g.data.store.models
 
     this.reload()
+    
+    return this
   },
   
   hashPassword (password) {

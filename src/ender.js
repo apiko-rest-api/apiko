@@ -10,8 +10,6 @@ module.exports = {
     // merge generic, core and user endpoints, override: generic <- core <- user
     this.endpoints = deepmerge.all([this.genericCollectionEndpoints(), g.core.endpoints, g.manager.setup.endpoints])
 
-    //g.log.d(g.exApp._router.stack)
-
     // register all endpoint handlers
     for (let i in this.endpoints) {
       route = i.split(' ')
@@ -81,7 +79,7 @@ module.exports = {
           user: handler
         }
       } else {
-        if (end.extendable) {
+        if (this.endpoints[end].extendable) {
           g.log(2, 'Extending an existing core endpoint:', end)
           this.endpoints[end].handlers.user = handler
         } else {
@@ -107,7 +105,7 @@ module.exports = {
       }
     }
 
-    this.addHandling(end)
+    this.addHandling(end, handler)
   },
   
   genericCollectionEndpoints () {
@@ -217,14 +215,18 @@ module.exports = {
       for (let i in req.endpoint.params) {
         if (req.endpoint.params[i].required && ((req.all[i] === undefined) || (req.all[i] === '')) ) {
           g.log.w(3, "The", i, "parameter is required, but undefined or empty.")
-          res.error(400, "The " + i + " parameter is required, but undefined or empty.", 1)
+          if (!res.headersSent) {
+            res.error(400, "The " + i + " parameter is required, but undefined or empty.", 1)
+          }
         }
         
         if (req.endpoint.params[i].regex && (req.all[i] !== undefined) && (req.all[i] !== '') && !res.headersSent) {
           var regex = new RegExp(req.endpoint.params[i].regex)
           if (!regex.test(req.all[i])) {
             g.log.w(3, "The", i, "parameter is in an incorrect format (no regex match): '" + req.all[i] + "' Regex:", regex)
-            res.error(400, "The " + i + " parameter is in an incorrect format (no regex match).", 2)
+            if (!res.headersSent) {
+              res.error(400, "The " + i + " parameter is in an incorrect format (no regex match).", 2)
+            }
           }
         }
       }
@@ -308,7 +310,6 @@ module.exports = {
     g.log(2, 'Checking restrictions...')
 
     var end = g.ender.endFromReq(req)
-    console.log(req.session, end)
     
     if (end.restrict) {
       if (!req.session.user) {

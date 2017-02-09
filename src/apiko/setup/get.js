@@ -6,5 +6,5 @@ module.exports = function (req, res, next) {
     }
   }
 
-  res.success(g.manager.setup.endpoints)
+  res.success(g.manager.setup)
 }

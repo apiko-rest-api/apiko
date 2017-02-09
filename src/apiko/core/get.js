@@ -12,8 +12,7 @@ module.exports = function (req, res, next) {
   var core = JSON.parse(JSON.stringify(g.core))
   
   // add generic endpoints
-  var endpoints = deepmerge.all([g.ender.genericCollectionEndpoints(), core.endpoints])
-  core.endpoints = endpoints
+  core.endpoints = deepmerge.all([g.ender.genericCollectionEndpoints(), core.endpoints])
 
   res.success(core)
 }
