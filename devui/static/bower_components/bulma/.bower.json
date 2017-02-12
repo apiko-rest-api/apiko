@@ -1,0 +1,37 @@
+{
+  "name": "bulma",
+  "version": "0.3.0",
+  "homepage": "http://bulma.io",
+  "authors": [
+    "jgthms <bbxdesign@gmail.com>"
+  ],
+  "description": "Modern CSS framework based on Flexbox",
+  "main": "bulma.sass",
+  "keywords": [
+    "css",
+    "sass",
+    "flexbox",
+    "responsive",
+    "framework"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "docs",
+    "images"
+  ],
+  "_release": "0.3.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.3.0",
+    "commit": "9350395589d6307c57e90db742c4f9a60b55aa5b"
+  },
+  "_source": "https://github.com/jgthms/bulma.git",
+  "_target": "^0.3.0",
+  "_originalSource": "bulma",
+  "_direct": true
+}
