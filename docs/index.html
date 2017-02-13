@@ -1,107 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title data-t="content" data-t-id="app-title">Apiko</title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Apiko</title>
+  <meta name="description" content="Apiko - The easiest way to create a REST API">
 
-    <link rel="shortcut icon" href="favicon.png">
-    <style>
+  <link rel="author" href="http://plus.google.com/+MiroslavKašpar">
+  <link rel="publisher" href="http://plus.google.com/115137209896495758041">
 
-      html, body {
-        padding: 0;
-        margin: 0;
-      }
+  <meta property="og:title" content="Apiko">
+  <meta property="og:type" content="article">
+  <meta property="og:image" content="https://kasp1.github.io/apiko/promo1280x720.png">
+  <meta property="og:description" content="Apiko - The easiest way to create a REST API">
+  <meta property="og:url" content="https://kasp1.github.io/apiko/">
 
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Apiko">
+  <meta name="twitter:description" content="Apiko - The easiest way to create a REST API">
+  <meta name="twitter:creator" content="@MK_Corp">
+  <meta name="twitter:image:src" content="https://kasp1.github.io/apiko/promo1280x720.png">
+  <meta name="twitter:domain" content="https://kasp1.github.io/apiko/">
+  <meta name="twitter:app:name:iphone" content="">
+  <meta name="twitter:app:name:ipad" content="">
+  <meta name="twitter:app:name:googleplay" content="">
+  <meta name="twitter:app:url:iphone" content="">
+  <meta name="twitter:app:url:ipad" content="">
+  <meta name="twitter:app:url:googleplay" content="">
+  <meta name="twitter:app:id:iphone" content="">
+  <meta name="twitter:app:id:ipad" content="">
+  <meta name="twitter:app:id:googleplay" content="">
+
+
+  <link rel="shortcut icon" href="favicon.png">
+  <style>
+
+    html, body {
+      padding: 0;
+      margin: 0;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      color: #4d4d4d;
+    }
+
+    header {
+      text-align: center;
+      width: 100%;
+    }
+
+    header h1 {
+      font-size: 1em;
+      display: inline;
+      font-weight: normal;
+    }
+
+    header img {
+      border: none;
+      display: inline-block;
+      margin-bottom: 20px;
+      width: 20%;
+    }
+
+    main {
+      text-align: center;
+      background: #00980e;
+      color: #ffffff;
+      text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
+      box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+    }
+
+    div.wrapper {
+      padding: 20px;
+    }
+
+    a, a:link, a:visited, a:hover, a:active {
+      color: #00980e;
+      text-decoration: none;
+      font-style: italic;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    main a, main a:link, main a:visited, main a:hover, main a:active {
+      color: #ffffff;
+    }
+
+    pre {
+      background-color: #ffffff;
+      border-radius: 10px;
+      display: inline-block;
+      padding: 10px;
+      text-align: left;
+      color: #303030;
+      text-shadow: none;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+      white-space: pre-wrap;
+    }
+
+    footer {
+      text-align: center;
+      font-size: .9em;
+    }
+
+    strong {
+      font-weight: normal;
+    }
+
+    @media screen and (max-width: 480px) {
       body {
-        font-family: 'Arial', sans-serif;
-        color: #4d4d4d;
-      }
-
-      header {
-        text-align: center;
-        width: 100%;
-      }
-
-      header h1 {
-        font-size: 1em;
-        display: inline;
-        font-weight: normal;
+        font-size: 1.1em;
       }
 
       header img {
-        border: none;
-        display: inline-block;
-        margin-bottom: 20px;
-        width: 20%;
+        width: 50%;
       }
+    }
 
-      main {
-        text-align: center;
-        background: #00980e;
-        color: #ffffff;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, .5);
-        box-shadow: 0 0 10px rgba(0, 0, 0, .5);
-      }
-
-      div.wrapper {
-        padding: 20px;
-      }
-
-      a, a:link, a:visited, a:hover, a:active {
-        color: #00980e;
-        text-decoration: none;
-        font-style: italic;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      main a, main a:link, main a:visited, main a:hover, main a:active {
-        color: #ffffff;
-      }
-
-      pre {
-        background-color: #ffffff;
-        border-radius: 10px;
-        display: inline-block;
-        padding: 10px;
-        text-align: left;
-        color: #303030;
-        text-shadow: none;
-        box-shadow: 0 0 10px rgba(0, 0, 0, .5);
-        white-space: pre-wrap;
-      }
-
-      footer {
-        text-align: center;
-        font-size: .9em;
-      }
-
-      strong {
-        font-weight: normal;
-      }
-
-      @media screen and (max-width: 480px) {
-        body {
-          font-size: 1.1em;
-        }
-        
-        header img {
-          width: 50%;
-        }
-      }
-
-    </style>
+  </style>
 </head>
 
 <body>
   <header>
     <div class="wrapper">
       <p><img src="logo.svg" alt="Apiko Logo"></p>
-      <h1>Apiko - The easiest way to create a REST API server</h1>
+      <h1>Apiko - The easiest way to create a REST API</h1>
     </div>
   </header>
   <main>
@@ -117,7 +144,7 @@ cd apiko-start
 npm install
 npm run dev</code></pre>
         <p>Apiko then opens in a browser tab. If it doesn't, go to <a href="http://localhost:5000/dev/" target="_blank">http://localhost:5000/dev/</a>.</p>
-        <small><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">How to install Git</a> &centerdot;  <a href="http://blog.npmjs.org/post/85484771375/how-to-install-npm" target="_blank">How to install NPM</a></small>
+        <small><a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">How to install Git</a> &centerdot;  <a href="http://blog.npmjs.org/post/85484771375/how-to-install-npm" target="_blank">How to install NPM</a> &centerdot;  <a href="https://github.com/kasp1/apiko" target="_blank">GitHub Repository</a></small>
       </div>
     </div>
   </main>
@@ -128,5 +155,14 @@ npm run dev</code></pre>
       <img src="favicon.png" alt="Apiko Logo Small" style="width: 50px;">
     </div>
   </footer>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-91880662-1', 'auto');
+    ga('send', 'pageview');
+  </script>
 </body>
 </html>
