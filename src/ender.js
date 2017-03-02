@@ -56,7 +56,7 @@ module.exports = {
       g.exApp[method](route, g.ender.endIfNotEnded)
     }
     
-    g.log(2, 'Endpoints set up.')
+    g.log(2, 'Core and generic endpoints set up.')
   },
 
   addHandling (end, handler) {
@@ -80,7 +80,7 @@ module.exports = {
         }
       } else {
         if (this.endpoints[end].extendable) {
-          g.log(2, 'Extending an existing core endpoint:', end)
+          g.log(2, 'Extending an existing core or generic endpoint:', end)
           this.endpoints[end].handlers.user = handler
         } else {
           g.log.e(1, 'You are trying to extend a core endpoint that should not be extended (may affect core functionality):', end)

@@ -1,4 +1,6 @@
-module.exports = function (req, res, next) {
+module.exports = function genericPost (req, res, next) {
+  console.log(req.route)
+  
   var collection = g.ender.endFromReq(req).split('/')[1]
   
   g.log(3, 'Generic POST /' + collection)
@@ -8,7 +10,7 @@ module.exports = function (req, res, next) {
   }
 
   var data = {}
-  for (let column in g.data.collections[i]) {
+  for (let column in g.data.collections[collection]) {
     data[column] = req.all[column]
   }
 

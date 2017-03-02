@@ -1,4 +1,4 @@
-module.exports = function (req, res, next) {
+module.exports = function genericDelete (req, res, next) {
   var collection = g.ender.endFromReq(req).split('/')[1]
   
   g.log(3, 'Generic DELETE /' + collection + '/:id')
