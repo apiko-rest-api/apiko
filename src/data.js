@@ -2,7 +2,8 @@ const bcrypt = require('bcryptjs')
 const deepmerge = require('deepmerge')
 const Sequelize = require('sequelize')
 
-module.exports = {
+module.exports = function(g) {
+  return {
   store: null,
   collections: null,
 
@@ -124,4 +125,5 @@ module.exports = {
       })
     })
   }
+}
 }

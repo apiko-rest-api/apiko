@@ -1,9 +1,11 @@
 "use strict"
-global.g = global // sneaky hack to shorten global.something to g.something
+// global.g = global // sneaky hack to shorten global.something to g.something
+let g = {};
+const apiko = g;
 
 const bcrypt = require('bcryptjs')
 const http = require('http')
-g.express = require('express')
+const express = apiko.express = require('express')
 const path = require('path')
 const cors = require('cors')
 const bodyParser = require('body-parser')
@@ -11,11 +13,11 @@ const session = require('express-session')
 const FileStore = require('session-file-store')(session)
 
 g.core = require('./src/core')
-g.config = require('./src/config')
-g.log = require('./src/log')
-g.ender = require('./src/ender')
-g.manager = require('./src/manager')
-g.data = require('./src/data')
+g.config = require('./src/config')(g)
+g.log = require('./src/log')(g)
+g.ender = require('./src/ender')(g)
+g.manager = require('./src/manager')(g)
+g.data = require('./src/data')(g)
 
 module.exports = {
   customEnds: [],
@@ -69,6 +71,10 @@ module.exports = {
     g.app = this
     g.exApp = express()
 
+    g.exApp.use(function(req, res, next) {
+      req.apiko = g;
+      next();
+    })
     g.exApp.use(cors())
     g.exApp.use(bodyParser.json())
     g.exApp.use(bodyParser.urlencoded({ extended: true }))

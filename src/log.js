@@ -15,10 +15,13 @@ const colors = require('colors/safe')
 // g.log.w(loglevel, any number of args here as this was console.warn)
 // g.log.e(loglevel, any number of args here as this was console.error)
 //
+
+var apiko;
+
 var log = function () {
   var args = Array.prototype.slice.call(arguments)
 
-  if (args[0] <= global.config.verbosity) {
+  if (args[0] <= apiko.config.verbosity) {
     args[0] = '[APIKO LOG ' + timestamp() + ']'
     console.log.apply(console, args)
   }
@@ -27,7 +30,7 @@ var log = function () {
 log.w = function () {
   var args = Array.prototype.slice.call(arguments)
 
-  if (args[0] <= global.config.verbosity) {
+  if (args[0] <= apiko.config.verbosity) {
     args[0] = '[APIKO WRN ' + timestamp() + ']'
 
     for (let i in args) {
@@ -41,7 +44,7 @@ log.w = function () {
 log.e = function () {
   var args = Array.prototype.slice.call(arguments)
 
-  if (args[0] <= global.config.verbosity) {
+  if (args[0] <= apiko.config.verbosity) {
     args[0] = '[APIKO ERR ' + timestamp() + ']'
 
     for (let i in args) {
@@ -62,7 +65,10 @@ log.d = function () {
   console.error.apply(console, args)
 }
 
-module.exports = log
+module.exports = function(g) {
+  apiko = g;
+  return log
+}
 
 function timestamp() {
   var time = new Date()

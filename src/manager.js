@@ -1,7 +1,8 @@
 const path = require('path')
 const fs = require('fs')
 
-module.exports = {
+module.exports = function(g){
+  return {
   setup: null,
   file: '',
 
@@ -82,4 +83,5 @@ module.exports = {
 
     return secret
   }
+}
 }

@@ -1,4 +1,6 @@
 module.exports = function (req, res, next) {
+  let g = req.apiko;
+  
   g.log(2, 'Registering a user...')
   var password = g.app.hashPassword(req.all.password)
   

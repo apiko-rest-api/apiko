@@ -1,6 +1,8 @@
 const bcrypt = require('bcryptjs')
 
 module.exports = function (req, res, next) {
+  let g = req.apiko;
+  
   var password = g.app.hashPassword(req.all.password)
   
   g.store.users.findOne({ where: { username: req.all.username }}).then((user) => {

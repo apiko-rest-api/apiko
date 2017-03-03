@@ -1,7 +1,9 @@
 const deepmerge = require('deepmerge')
 const path = require('path')
 
-module.exports = {
+module.exports = function(g){
+  return {
+
   endpoints: g.core.endpoints,
 
   reload () {
@@ -361,4 +363,5 @@ module.exports = {
     
     return end
   }
+}
 }

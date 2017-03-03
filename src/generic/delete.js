@@ -1,4 +1,6 @@
 module.exports = function genericDelete (req, res, next) {
+  let g = req.apiko;
+  
   var collection = g.ender.endFromReq(req).split('/')[1]
   
   g.log(3, 'Generic DELETE /' + collection + '/:id')
