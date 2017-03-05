@@ -88,7 +88,9 @@ module.exports = {
     // sessions
     g.exApp.use(session({
       store: new FileStore(),
-      secret: 'apikosSecret'
+      secret: 'apikosSecret',
+      resave: true,
+      saveUninitialized: false
     }))
 
     // if anybody wants to serve their web using Apiko instead of using a third party web server

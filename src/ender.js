@@ -13,8 +13,9 @@ module.exports = function(g){
     
     // merge generic, core and user endpoints, override: generic <- core <- user
     this.endpoints = deepmerge.all([this.genericCollectionEndpoints(), g.core.endpoints, g.manager.setup.endpoints])
-
+    
     // register all endpoint handlers
+    var route;
     for (let i in this.endpoints) {
       route = i.split(' ')
       var method = route[0].toLowerCase()
@@ -64,7 +65,7 @@ module.exports = function(g){
   },
 
   addHandling (end, handler) {
-    route = end.split(' ')
+    var route = end.split(' ')
     var method = route[0].toLowerCase()
     var unprefixedRoute = route[1]
     route = g.config.prefixed(route[1])
