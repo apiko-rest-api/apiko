@@ -1,5 +1,3 @@
-const deepmerge = require('deepmerge')
-
 module.exports = function (req, res, next) {
   let g = req.apiko;
   
