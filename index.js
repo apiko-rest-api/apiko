@@ -20,6 +20,10 @@ g.manager = require('./src/manager')(g)
 g.data = require('./src/data')(g)
 
 module.exports = {
+  // access to core props and objects from outside (for user handlers)
+  log: g.log,
+  store: g.data.store,
+  
   customEnds: [],
   
   on (route, handler, params) {
