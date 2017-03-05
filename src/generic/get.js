@@ -36,7 +36,7 @@ module.exports = function genericGet (req, res, next) {
   }
   
   g.store[collection].findAll(opts).then(records => {
-    if (records.lenght) {
+    if (records.length) {
       res.status(200)
       res.body = JSON.stringify(records)
     } else {
