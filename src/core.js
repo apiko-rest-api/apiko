@@ -120,6 +120,25 @@ module.exports = {
     },
     'POST /files': {
       extendable: true
+    },
+    'GET /apiko/stats': {
+      extendable: false,
+      comment: 'Stats data with optional interval parameters. If no interval is set, data for the recent 30 days will be returned.',
+      handlers: {
+        core: './apiko/stats/get'
+      },
+      params: {
+        start: {
+          required: false,
+          regex: '^\\d+$',
+          comment: 'Time interval start for the requested stats as an UNIX timestamp.'
+        },
+        end: {
+          required: false,
+          regex: '^\\d+$',
+          comment: 'Time interval end for the requested stats as an UNIX timestamp.'
+        },
+      }
     }
   }
 } 
