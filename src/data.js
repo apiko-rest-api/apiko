@@ -1,3 +1,5 @@
+"use strict"
+
 const bcrypt = require('bcryptjs')
 const deepmerge = require('deepmerge')
 const Sequelize = require('sequelize')
