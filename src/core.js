@@ -63,7 +63,7 @@ module.exports = {
       },
       comment: 'Returns a list of users.'
     },
-    'GET /users/:id': {
+    'GET /users/:id(\\d+)/': {
       extendable: true,
       restrict: true,
       handlers: {
@@ -98,6 +98,18 @@ module.exports = {
       },
       errors: {
         5: 'This username is already registered.'
+      }
+    },
+    'GET /users/exists': {
+      extendable: true,
+      params: {
+        username: {
+          required: true,
+          regex: '^\\S+\\@\\S+\\.\\S+$',
+        },
+      },
+      handlers: {
+        core: './users/exists',
       }
     },
     'PUT /apiko/setup': {

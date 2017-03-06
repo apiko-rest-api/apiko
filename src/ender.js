@@ -156,7 +156,7 @@ module.exports = function(g){
       }
 
       // GET a single item by ID for every collection
-      genericEndpoints['GET /' + i + '/:id'] = {
+      genericEndpoints['GET /' + i + '/:id(\\d+)/'] = {
         extendable: true,
         params: {
           id: {
