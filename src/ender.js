@@ -123,10 +123,10 @@ module.exports = function(g){
       genericEndpoints['GET /' + i] = {
         extendable: true,
         params: {
-          limit: { regex: '^\d+$' },
-          offset: { regex: '^\d+$' },
-          order: { regex: '^[\S ]+$' },
-          group: { regex: '^[\S ]+$' }
+          limit: { regex: '^\\d+$' },
+          offset: { regex: '^\\d+$' },
+          order: { regex: '^[\\S ]+$' },
+          group: { regex: '^[\\S ]+$' }
         },
         handlers: {
           core: './generic/get'
