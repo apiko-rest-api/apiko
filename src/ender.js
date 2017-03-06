@@ -315,26 +315,27 @@ module.exports = function(g){
     g.log(2, 'Checking restrictions...')
 
     var end = g.ender.endFromReq(req)
-    
-    if (end.restrict) {
+    var endpoint = g.ender.endpoints[end]
+
+    if (endpoint.restrict) {
       if (!req.session.user) {
-        g.log.w(1, 'This endpoint requires login.')
-        res.error(401, "This endpoint requires login.", 8)
+        g.log.w(1, 'This endpointpoint requires login.')
+        res.error(401, "This endpointpoint requires login.", 8)
       }
       
-      if (end.restrict !== true) {
+      if (endpoint.restrict !== true) {
         var userRoles = req.session.user.role.split(',')
 
         var hasOne = false
-        for (let i in end.restrict) {
-          if (userRoles.indexOf(end.restrict[i]) >= 0) {
+        for (let i in endpoint.restrict) {
+          if (userRoles.indexOf(endpoint.restrict[i]) >= 0) {
             hasOne = true
           }
         }
         
         if (!hasOne) {
-          g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", end.restrict.join(', '))
-          res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + end.restrict.join(', '), 9)
+          g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict.join(', '))
+          res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict.join(', '), 9)
         }
       }
     }
