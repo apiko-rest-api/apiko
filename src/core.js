@@ -57,13 +57,19 @@ module.exports = {
     },
     'GET /users': {
       extendable: true,
-      comment: 'Retrieves a list of registered users.',
-      restrict: true
+      restrict: true,
+      handlers: {
+        core: './users/get',
+      },
+      comment: 'Returns a list of users.'
     },
     'GET /users/:id': {
       extendable: true,
-      comment: 'Retrieves a user information/profile.',
-      restrict: true
+      restrict: true,
+      handlers: {
+        core: './users/getone',
+      },
+      comment: 'Returns information about a user with the specified ID.'
     },
     'DELETE /users': {
       extendable: true,
