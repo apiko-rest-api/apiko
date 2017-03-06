@@ -18,7 +18,13 @@ module.exports = function genericPost (req, res, next) {
 
   g.store[collection].create(data).then(record => {
     res.status(200)
-    res.body = JSON.stringify(record)
+    res.body = JSON.stringify(record, (k, v) => {
+      if (v === undefined) {
+        return null
+      }
+      return v
+    })
+    
     next()
   }).catch(e => {
     g.log.w(1, 'Error inserting a record to the DB:', e)
