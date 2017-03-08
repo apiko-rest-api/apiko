@@ -110,7 +110,7 @@ module.exports = function(g) {
     
     if (req.session) {
       if (req.session.user) {
-        uid = req.req.session.user.id
+        uid = req.session.user.id
       }
     }
     

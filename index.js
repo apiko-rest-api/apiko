@@ -60,8 +60,6 @@ module.exports = {
   loaded () {
     g.log(2, 'Adding custom endpoint handlers...')
     
-    console.log(this.customEnds)
-    
     for (let i in this.customEnds) {
       if (this.customEnds[i].params) {
         g.ender.on(this.customEnds[i].route, this.customEnds[i].handler, this.customEnds[i].params)
