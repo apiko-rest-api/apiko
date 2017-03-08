@@ -82,7 +82,7 @@ module.exports = function(g) {
         fields[i].type = Sequelize[fields[i].type]
       }
 
-      if (i == 'id') {
+      if (i === 'id') {
         fields[i].primaryKey = true
         fields[i].autoIncrement = true
       }
@@ -92,7 +92,7 @@ module.exports = function(g) {
       freezeTableName: true // Model tableName will be the same as the model name
     })
 
-    return collection.sync({ force: false }) // force: true drops & recreates tables every run
+    return collection.sync({ force: true }) // force: true drops & recreates tables every run
   },
   
   logRequest (req, res, next) {
@@ -116,7 +116,7 @@ module.exports = function(g) {
   
   verifyPassword (username, password) {
     return new Promise((resolve, reject) => {
-      g.data.store.models.users.findOne({ where: {username: username} }).then((user) => {
+      g.data.store.models.users.findOne({ where: { username: username } }).then((user) => {
         if (bcrypt.compareSync(password, user.password)) {
           resolve()
         } else {
