@@ -138,7 +138,7 @@ module.exports = function(g){
 
       postParams = {}
       for (let column in g.data.collections[i]) {
-        if (column !== 'id') {
+        if ((column !== 'id') && (column !== 'owner')) {
           postParams[column] = { required: true }
         }
       }

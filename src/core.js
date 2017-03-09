@@ -1,12 +1,6 @@
 module.exports = {
   collections: {
     users: {
-      id: {
-        type: 'INTEGER'
-      },
-      owner: {
-        type: 'INTEGER'
-      },
       username: {
         type: 'STRING 100'
       },
@@ -19,12 +13,6 @@ module.exports = {
       }
     },
     files: {
-      id: {
-        type: 'INTEGER'
-      },
-      owner: {
-        type: 'INTEGER'
-      },
       mime: {
         type: 'STRING 100'
       },
@@ -87,10 +75,6 @@ module.exports = {
         password: {
           required: true,
           regex: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,18}$'
-        },
-        name: {
-          required: true,
-          regex: '^[\\s\\w\\.áäčďžéíĺľňóôŕřšťúýžÁÄČĎŽÉÍĹĽŇÓÔŔŘŠŤÚÝŽ]{2,40}$'
         }
       },
       handlers: {

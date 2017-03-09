@@ -15,6 +15,11 @@ module.exports = function genericPost (req, res, next) {
   for (let column in g.data.collections[collection]) {
     data[column] = req.all[column]
   }
+  
+  data.owner = 0
+  if (req.session.user) {
+    data.owner = req.session.user.id
+  }
 
   g.store[collection].create(data).then(record => {
     res.status(200)

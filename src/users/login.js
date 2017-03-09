@@ -8,16 +8,14 @@ module.exports = function (req, res, next) {
   g.store.users.findOne({ where: { username: req.all.username }}).then((user) => {
     if (user) {
       if (bcrypt.compareSync(req.all.password, user.password)) {
-        req.session.user = user
+        let plainUser = JSON.parse(JSON.stringify(user))
+        req.session.user = plainUser
+        
+        // don't show the password hash in the response
+        delete plainUser.password
 
         res.status(200)
-        res.body = JSON.stringify({
-          id: user.id,
-          username: user.username,
-          role: user.role,
-          createdAt: user.createdAt,
-          updatedAt: user.updatedAt
-        })
+        res.body = JSON.stringify(plainUser)
       } else {
         res.setError(401, 'Incorrect password.', 7)
       }
