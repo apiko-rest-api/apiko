@@ -1,9 +1,7 @@
 module.exports = function genericPost (req, res, next) {
   let g = req.apiko;
   
-  console.log(req.route)
-  
-  var collection = g.ender.endFromReq(req).split('/')[1]
+  let collection = g.ender.endFromReq(req).split('/')[1]
   
   g.log(3, 'Generic POST /' + collection)
 
@@ -11,7 +9,7 @@ module.exports = function genericPost (req, res, next) {
     res.setError(404, 'Undefined collection.', 6)
   }
 
-  var data = {}
+  let data = {}
   for (let column in g.data.collections[collection]) {
     data[column] = req.all[column]
   }
@@ -20,6 +18,8 @@ module.exports = function genericPost (req, res, next) {
   if (req.session.user) {
     data.owner = req.session.user.id
   }
+
+  data['owner'] = req.session.user ? req.session.user.id : 0
 
   g.store[collection].create(data).then(record => {
     res.status(200)
