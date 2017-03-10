@@ -84,12 +84,12 @@ module.exports = {
         5: 'This username is already registered.'
       }
     },
-    'GET /users/exists': {
+    'GET /users/exists/:username': {
       extendable: true,
       params: {
         username: {
           required: true,
-          regex: '^\\S+\\@\\S+\\.\\S+$',
+          regex: '^\\S+\\@\\S+\\.\\S+$'
         },
       },
       handlers: {
