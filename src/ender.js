@@ -24,6 +24,9 @@ module.exports = function(g){
       // extend handler arguments with Apiko specific API
       g.exApp[method](route, g.ender.extendWithApi)
 
+      // load a different session if specified in ?token=
+      g.exApp[method](route, g.ender.loadSession)
+
       // stats logging
       g.exApp[method](route, g.data.logRequest)
       
@@ -319,6 +322,29 @@ module.exports = function(g){
     next()
   },
   
+  loadSession (req, res, next) {
+    g.log(2, 'Checking if a different session token is specified...')
+    
+    if (req.all.token) {
+      g.log(2, 'A different session token is specified. Loading session...')
+  
+      req.sessionStore.get(req.all.token, (err, session) => {
+        if (session) {
+          // createSession() re-assigns req.session
+          req.sessionStore.createSession(req, session)
+          g.log(2, 'Session', req.all.token, 'loaded.')
+        } else {
+          g.log.w(1, "Could not load the specified session.", err)
+        }
+
+        return next()
+      })
+    } else {
+      g.log(2, 'No session token is specified, going with', req.sessionID)
+      next()
+    }
+  },
+  
   checkRestrictions (req, res, next) {
     g.log(2, 'Checking restrictions...')
 
@@ -375,5 +401,4 @@ module.exports = function(g){
     
     return end
   }
-}
-}
+}}

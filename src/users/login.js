@@ -15,7 +15,7 @@ module.exports = function (req, res, next) {
         delete plainUser.password
 
         res.status(200)
-        res.body = JSON.stringify(plainUser)
+        res.body = JSON.stringify({ token: req.sessionID, user: plainUser })
       } else {
         res.setError(401, 'Incorrect password.', 7)
       }
