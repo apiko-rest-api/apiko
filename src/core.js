@@ -41,6 +41,18 @@ module.exports = {
       errors: {
         6: 'There is no user with this username.',
         7: 'Incorrect password.'
+      },
+      "response": {
+        "token": {
+          "present": "always",
+          "type": "string",
+          "comment": "The session token/ID."
+        },
+        "user": {
+          "present": "always",
+          "type": "object",
+          "comment": "An object containing the currently logged-in user's information."
+        }
       }
     },
     'GET /users': {
