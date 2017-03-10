@@ -167,7 +167,7 @@ module.exports = function(g){
       }
 
       // GET a single item by ID for every collection
-      genericEndpoints['GET /' + i + '/:id(\\d+)/'] = {
+      genericEndpoints['GET /' + i + '/:id'] = {
         extendable: true,
         params: {
           id: {
@@ -356,8 +356,10 @@ module.exports = function(g){
         g.log.w(1, 'This endpointpoint requires login.')
         res.error(401, "This endpointpoint requires login.", 8)
       }
-      
-      if (endpoint.restrict !== true) {
+
+      if (endpoint.restrict === true) {
+        req.checkOwnership = endpoint.ownership
+      } else {
         var userRoles = req.session.user.role.split(',')
 
         var hasOne = false
@@ -366,10 +368,14 @@ module.exports = function(g){
             hasOne = true
           }
         }
-        
+
         if (!hasOne) {
-          g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict.join(', '))
-          res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict.join(', '), 9)
+          if (endpoint.ownership === true ) {
+            req.checkOwnership = true
+          } else {
+            g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict.join(', '))
+            res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict.join(', '), 9)
+          }
         }
       }
     }

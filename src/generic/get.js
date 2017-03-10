@@ -18,6 +18,12 @@ module.exports = function genericGet (req, res, next) {
       opts.where = {}
     }
   }
+
+  if (req.checkOwnership === true) {
+    let userId = req.session.user ? req.session.user.id : null
+    opts.where = opts.where || {}
+    opts.where.owner = userId
+  }
   
   if (req.all.limit) {
     opts.limit = req.all.limit
