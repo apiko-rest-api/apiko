@@ -16,8 +16,11 @@ module.exports = {
       mime: {
         type: 'STRING 100'
       },
-      path: {
+      name: {
         type: 'TEXT'
+      },
+      size: {
+        type: 'INTEGER'
       }
     }
   },
@@ -46,7 +49,7 @@ module.exports = {
         "token": {
           "present": "always",
           "type": "string",
-          "comment": "The session token/ID."
+          "comment": "The session toaken/ID."
         },
         "user": {
           "present": "always",
@@ -143,7 +146,7 @@ module.exports = {
       extendable: true,
       comment: 'Retrieves a list of all files.'
     },
-    'GET /files/:id': {
+    'GET /files/:id(\\d+)/': {
       extendable: true,
       comment: 'Downloads a file specified by ID.',
       params: {
@@ -151,20 +154,47 @@ module.exports = {
           required: true,
           regex: '^\\d{1,10}$'
         }
+      },
+      handlers: {
+        core: './files/getone'
+      },
+      errors: {
+        10: 'No such file.'
       }
     },
     'POST /files': {
       extendable: true,
-      comment: 'Uploads a new file.'
+      comment: 'Uploads a new file.',
+      params: {
+        id: {
+          required: false
+        },
+        size: {
+          required: false
+        },
+        name: {
+          required: false
+        },
+        mime: {
+          required: false
+        }
+      },
+      handlers: {
+        core: './files/post'
+      },
+      errors: {
+        12: 'The file upload failed.',
+        13: 'The file upload has been aborted by the client (timeout or close event on the socket).'
+      }
     },
     'PUT /files/:id': {
       extendable: true,
-      comment: 'Updates a file specified by ID.',
-      params: {
-        id: {
-          required: true,
-          regex: '^\\d{1,10}$'
-        }
+      comment: 'Not implemented. Overwriting files is not implemented by default.',
+      handlers: {
+        core: './files/put'
+      },
+      errors: {
+        11: 'Not implemented. Overwriting files is not implemented by default.'
       }
     },
     'DELETE /files/:id': {
@@ -175,6 +205,12 @@ module.exports = {
           required: true,
           regex: '^\\d{1,10}$'
         }
+      },
+      handlers: {
+        core: './files/delete'
+      },
+      errors: {
+        10: 'No such record.'
       }
     },
     'GET /apiko/stats': {
