@@ -29,6 +29,9 @@ module.exports = function(g){
 
       // stats logging
       g.exApp[method](route, g.data.logRequest)
+
+      // check whether if a database collection with the name in URL exists
+      g.exApp[method](route, g.ender.checkCollection)
       
       // check whether if the client complies with the endpoint restriction
       g.exApp[method](route, g.ender.checkRestrictions)
@@ -167,7 +170,7 @@ module.exports = function(g){
       }
 
       // GET a single item by ID for every collection
-      genericEndpoints['GET /' + i + '/:id(\\d+)/'] = {
+      genericEndpoints['GET /' + i + '/:id'] = {
         extendable: true,
         params: {
           id: {
@@ -356,8 +359,10 @@ module.exports = function(g){
         g.log.w(1, 'This endpointpoint requires login.')
         res.error(401, "This endpointpoint requires login.", 8)
       }
-      
-      if (endpoint.restrict !== true) {
+
+      if (endpoint.restrict === true) {
+        req.checkOwnership = endpoint.ownership
+      } else {
         var userRoles = req.session.user.role.split(',')
 
         var hasOne = false
@@ -366,10 +371,14 @@ module.exports = function(g){
             hasOne = true
           }
         }
-        
+
         if (!hasOne) {
-          g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict.join(', '))
-          res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict.join(', '), 9)
+          if (endpoint.ownership === true ) {
+            req.checkOwnership = true
+          } else {
+            g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict.join(', '))
+            res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict.join(', '), 9)
+          }
         }
       }
     }
@@ -378,6 +387,17 @@ module.exports = function(g){
       g.log(2, 'This request has passed the restrictions check.')
       next()
     }
+  },
+
+  checkCollection (req, res, next) {
+    g.log(2, 'Checking a database collection with the name in URL...')
+
+    var collection = g.ender.endFromReq(req).split('/')[1]
+    if (!g.store[collection]) {
+      res.error(404, "Undefined collection \'"+collection+"\'", 6)
+    }
+
+    next()
   },
   
   endIfNotEnded (req, res, next) {
