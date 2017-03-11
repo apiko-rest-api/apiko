@@ -1,7 +1,9 @@
 module.exports = function genericGetOne (req, res, next) {
   let g = req.apiko
   
-  var collection = g.ender.endFromReq(req).split('/')[1]
+  let end = g.ender.endFromReq(req)
+  let endpoint = g.ender.endpoints[end]
+  let collection = end.split('/')[1]
   
   g.log(3, 'Generic GET /' + collection + '/:id')
   
@@ -11,10 +13,17 @@ module.exports = function genericGetOne (req, res, next) {
   
   g.store[collection].findOne({ where: {id: req.all.id} }).then(record => {
     if (record) {
-      res.status(200)
-      res.body = JSON.stringify(record)
+      let userId = req.session.user ? req.session.user.id : null
+
+      if (req.checkOwnership === true && record.owner !== userId) {
+        g.log.w(1, "This user doesn't seem to have sufficient rights.")
+        res.error(403, "This user doesn't seem to have sufficient rights.")
+      } else {
+        res.status(200)
+        res.body = JSON.stringify(record)
+      }
     } else {
-      res.setError(404, 'No such record.', 10)
+      res.error(404, 'No such record.', 10)
     }
   
     next()
