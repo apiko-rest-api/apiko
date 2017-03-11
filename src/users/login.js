@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs')
 
 module.exports = function (req, res, next) {
-  let g = req.apiko;
+  let g = req.apiko
   
   var password = g.app.hashPassword(req.all.password)
   

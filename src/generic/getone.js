@@ -1,5 +1,5 @@
 module.exports = function genericGetOne (req, res, next) {
-  let g = req.apiko;
+  let g = req.apiko
   
   var collection = g.ender.endFromReq(req).split('/')[1]
   

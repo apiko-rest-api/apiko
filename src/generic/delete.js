@@ -1,5 +1,5 @@
 module.exports = function genericDelete (req, res, next) {
-  let g = req.apiko;
+  let g = req.apiko
   
   var collection = g.ender.endFromReq(req).split('/')[1]
   
@@ -9,8 +9,9 @@ module.exports = function genericDelete (req, res, next) {
     res.setError(404, 'Undefined collection.', 6)
   }
   
-  g.store[collection].destroy({ where: { id: req.all.id } }).then(record => {
-    if (records) {
+  g.store[collection].destroy({ where: { id: req.all.id } }).then(success => {
+    if (success) {
+      res.status(200)
       next()
     } else {
       res.setError(404, 'No such record.', 10)

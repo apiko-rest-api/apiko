@@ -1,5 +1,5 @@
 module.exports = function genericPost (req, res, next) {
-  let g = req.apiko;
+  let g = req.apiko
   
   let collection = g.ender.endFromReq(req).split('/')[1]
   
