@@ -30,9 +30,6 @@ module.exports = function(g){
       // stats logging
       g.exApp[method](route, g.data.logRequest)
 
-      // check whether if a database collection with the name in URL exists
-      g.exApp[method](route, g.ender.checkCollection)
-      
       // check whether if the client complies with the endpoint restriction
       g.exApp[method](route, g.ender.checkRestrictions)
 
@@ -389,17 +386,6 @@ module.exports = function(g){
     }
   },
 
-  checkCollection (req, res, next) {
-    g.log(2, 'Checking a database collection with the name in URL...')
-
-    var collection = g.ender.endFromReq(req).split('/')[1]
-    if (!g.store[collection]) {
-      res.error(404, "Undefined collection \'"+collection+"\'", 6)
-    }
-
-    next()
-  },
-  
   endIfNotEnded (req, res, next) {
     if (!res.headersSent) {
       g.log(2, 'Automatically ending the response...')
