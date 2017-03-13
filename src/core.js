@@ -146,7 +146,7 @@ module.exports = {
       extendable: true,
       comment: 'Retrieves a list of all files.'
     },
-    'GET /files/:id(\\d+)/': {
+    'GET /files/:id': {
       extendable: true,
       comment: 'Downloads a file specified by ID.',
       params: {
