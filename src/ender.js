@@ -348,6 +348,12 @@ module.exports = function(g){
   checkRestrictions (req, res, next) {
     g.log(2, 'Checking restrictions...')
 
+    if (req.all.secret === g.config.secret) {
+      q.log(2, 'Access with secret admin key')
+      next()
+      return
+    }
+
     var end = g.ender.endFromReq(req)
     var endpoint = g.ender.endpoints[end]
 
