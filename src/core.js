@@ -230,6 +230,10 @@ module.exports = {
           regex: '^\\d+$',
           comment: 'Time interval end for the requested stats as an UNIX timestamp.'
         },
+        only_counter: {
+          required: false,
+          comment: 'Retrieves only stats counter without detalization if true'
+        },
       }
     },
     'GET /apiko/reference': {
