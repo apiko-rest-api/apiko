@@ -58,7 +58,7 @@ module.exports = function(g){
   },
 
   save () {
-    fs.writeFileSync(this.file, JSON.stringify(this.setup))
+    fs.writeFileSync(this.file, JSON.stringify(this.setup, null, 2))
   },
 
   defaultSetup () {
