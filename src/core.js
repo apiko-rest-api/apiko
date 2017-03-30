@@ -45,16 +45,16 @@ module.exports = {
         6: 'There is no user with this username.',
         7: 'Incorrect password.'
       },
-      "response": {
-        "token": {
-          "present": "always",
-          "type": "string",
-          "comment": "The session toaken/ID."
+      'response': {
+        'token': {
+          'present': 'always',
+          'type': 'string',
+          'comment': 'The session toaken/ID.'
         },
-        "user": {
-          "present": "always",
-          "type": "object",
-          "comment": "An object containing the currently logged-in user's information."
+        'user': {
+          'present': 'always',
+          'type': 'object',
+          'comment': "An object containing the currently logged-in user's information."
         }
       }
     },
@@ -62,7 +62,7 @@ module.exports = {
       extendable: true,
       restrict: true,
       handlers: {
-        core: './users/get',
+        core: './users/get'
       },
       comment: 'Returns a list of users.'
     },
@@ -70,7 +70,7 @@ module.exports = {
       extendable: true,
       restrict: true,
       handlers: {
-        core: './users/getone',
+        core: './users/getone'
       },
       comment: 'Returns information about a user with the specified ID.'
     },
@@ -105,10 +105,10 @@ module.exports = {
         username: {
           required: true,
           regex: '^\\S+\\@\\S+\\.\\S+$'
-        },
+        }
       },
       handlers: {
-        core: './users/exists',
+        core: './users/exists'
       }
     },
     'PUT /apiko/setup': {
@@ -233,12 +233,12 @@ module.exports = {
         only_counter: {
           required: false,
           comment: 'Retrieves only stats counter without detalization if true'
-        },
+        }
       }
     },
     'GET /apiko/reference': {
       extendable: false,
-      comment: "Displays a generated API reference of this API server.",
+      comment: 'Displays a generated API reference of this API server.',
       handlers: {
         core: './apiko/reference/get'
       },
@@ -250,11 +250,11 @@ module.exports = {
         core: {
           required: false,
           comment: 'Will display the core endpoints as a part of the reference if a true-like value is supplied.'
-        },
+        }
       },
       errors: {
         3: 'This server is protected by a secret that has to be supplied in the \'secret\' parameter.'
       }
-    },
+    }
   }
-} 
+}
