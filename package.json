@@ -70,7 +70,12 @@
     "tedious": "^1.14.0"
   },
   "description": "Top Secret",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^3.18.0",
+    "eslint-config-standard": "^7.1.0",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^2.1.1"
+  },
   "directories": {},
   "dist": {
     "shasum": "13fddfae217c0be2b0acb54ed441bfede2c3bbf8",
