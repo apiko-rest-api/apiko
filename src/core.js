@@ -45,16 +45,16 @@ module.exports = {
         6: 'There is no user with this username.',
         7: 'Incorrect password.'
       },
-      "response": {
-        "token": {
-          "present": "always",
-          "type": "string",
-          "comment": "The session toaken/ID."
+      'response': {
+        'token': {
+          'present': 'always',
+          'type': 'string',
+          'comment': 'The session toaken/ID.'
         },
-        "user": {
-          "present": "always",
-          "type": "object",
-          "comment": "An object containing the currently logged-in user's information."
+        'user': {
+          'present': 'always',
+          'type': 'object',
+          'comment': "An object containing the currently logged-in user's information."
         }
       }
     },
@@ -62,7 +62,7 @@ module.exports = {
       extendable: true,
       restrict: true,
       handlers: {
-        core: './users/get',
+        core: './users/get'
       },
       comment: 'Returns a list of users.'
     },
@@ -70,7 +70,7 @@ module.exports = {
       extendable: true,
       restrict: true,
       handlers: {
-        core: './users/getone',
+        core: './users/getone'
       },
       comment: 'Returns information about a user with the specified ID.'
     },
@@ -105,10 +105,10 @@ module.exports = {
         username: {
           required: true,
           regex: '^\\S+\\@\\S+\\.\\S+$'
-        },
+        }
       },
       handlers: {
-        core: './users/exists',
+        core: './users/exists'
       }
     },
     'PUT /apiko/setup': {
@@ -233,12 +233,12 @@ module.exports = {
         only_counter: {
           required: false,
           comment: 'Retrieves only stats counter without detalization if true'
-        },
+        }
       }
     },
     'GET /apiko/reference': {
       extendable: false,
-      comment: "Displays a generated API reference of this API server.",
+      comment: 'Displays a generated API reference of this API server.',
       handlers: {
         core: './apiko/reference/get'
       },
@@ -250,11 +250,41 @@ module.exports = {
         core: {
           required: false,
           comment: 'Will display the core endpoints as a part of the reference if a true-like value is supplied.'
-        },
+        }
       },
       errors: {
         3: 'This server is protected by a secret that has to be supplied in the \'secret\' parameter.'
       }
     },
+    'POST /users/password/change/:id': {
+      extendable: true,
+      comment: 'Attempts to change a user password (according to specified user ID).',
+      ownership: true,
+      restrict: 'admin', // only the user themself and an admin can change their password
+      params: {
+        id: {
+          required: true,
+          regex: '^\\d{1,10}$',
+          comment: 'User ID of whom password is being changed.'
+        },
+        old: {
+          required: true,
+          comment: 'The specified user\'s old password.'
+        },
+        new: {
+          required: true,
+          regex: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,18}$',
+          comment: 'The specified user\'s new password.'
+        }
+      },
+      handlers: {
+        core: './users/passwordchange'
+      },
+      errors: {
+        7: 'Incorrect old password.',
+        10: 'No user with such id'
+      },
+      'response': {}
+    }
   }
-} 
+}
