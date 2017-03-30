@@ -52,7 +52,14 @@ module.exports = function(g){
       content.endpoints = {}
     }
 
-    // parse setup here maybe?
+    for (let collection in content.collections) {
+      for (let property in content.collections[collection]) {
+        if (!content.collections[collection][property].type) {
+          g.log.w(1, 'The property \'', property, '\' of collection \'', collection, '\' must have a type specified.')
+          process.exit(1)
+        }
+      }
+    }
 
     return content
   },
