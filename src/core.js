@@ -255,6 +255,36 @@ module.exports = {
       errors: {
         3: 'This server is protected by a secret that has to be supplied in the \'secret\' parameter.'
       }
+    },
+    'POST /users/password/change/:id': {
+      extendable: true,
+      comment: 'Attempts to change a user password (according to specified user ID).',
+      ownership: true,
+      restrict: 'admin', // only the user themself and an admin can change their password
+      params: {
+        id: {
+          required: true,
+          regex: '^\\d{1,10}$',
+          comment: 'User ID of whom password is being changed.'
+        },
+        old: {
+          required: true,
+          comment: 'The specified user\'s old password.'
+        },
+        new: {
+          required: true,
+          regex: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,18}$',
+          comment: 'The specified user\'s new password.'
+        }
+      },
+      handlers: {
+        core: './users/passwordchange'
+      },
+      errors: {
+        7: 'Incorrect old password.',
+        10: 'No user with such id'
+      },
+      'response': {}
     }
   }
 }
