@@ -20,6 +20,7 @@ module.exports = function(g){
       pass: 'root',
       storage: 'datastore.sqlite'
     },
+    filesDirectory: 'files',
 
     merge (cfg) {
       g.log(2, 'Merging configs...')
@@ -130,6 +131,14 @@ module.exports = function(g){
           }
         } else {
           g.log(1, 'If you are trying to setup web sockets, configuration property ws.open should be true.')
+        }
+      }
+
+      if (cfg.filesDirectory) {
+        if (/^[a-zA-Z0-9]+$/g.test(cfg.filesDirectory)) {
+          g.config.filesDirectory = cfg.filesDirectory
+        } else {
+          g.log.w(1, 'The filesDirectory configuration property should be a string containing only alphanumeric characters (should not contain /). Going with default:', g.config.cfg.filesDirectory)
         }
       }
     },

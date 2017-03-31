@@ -1,5 +1,5 @@
 module.exports = function genericGet (req, res, next) {
-  let g = req.apiko;
+  let g = req.apiko
   
   var collection = g.ender.endFromReq(req).split('/')[1]
   
@@ -18,17 +18,23 @@ module.exports = function genericGet (req, res, next) {
       opts.where = {}
     }
   }
+
+  if (req.checkOwnership === true) {
+    let userId = req.session.user ? req.session.user.id : null
+    opts.where = opts.where || {}
+    opts.where.owner = userId
+  }
   
   if (req.all.limit) {
     opts.limit = req.all.limit
   }
   
   if (req.all.offset) {
-    opts.limit = req.all.limit
+    opts.offset = req.all.offset
   }
   
   if (req.all.order) {
-    opts.limit = req.all.limit
+    opts.order = req.all.order
   }
   
   if (req.all.group) {
@@ -36,7 +42,7 @@ module.exports = function genericGet (req, res, next) {
   }
   
   g.store[collection].findAll(opts).then(records => {
-    if (records.lenght) {
+    if (records.length) {
       res.status(200)
       res.body = JSON.stringify(records)
     } else {

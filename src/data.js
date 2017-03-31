@@ -35,7 +35,6 @@ module.exports = function(g) {
 
     // very core collections (not even public)
     var statsP = this.addCollection('stats', {
-      id: { type: 'INTEGER' },
       endpoint: { type: 'STRING 255' },
       ip: { type: 'STRING 45' },
       uid: { type: 'INTEGER' }
@@ -73,19 +72,28 @@ module.exports = function(g) {
   },
 
   addCollection (name, fields) {
-    var parts
     for (let i in fields) {
       if (fields[i].type.indexOf(' ') >= 0) {
-        parts = fields[i].type.split(' ')
+        let parts = fields[i].type.split(' ')
         fields[i].type = Sequelize[parts[0]](parts[1])
       } else {
         fields[i].type = Sequelize[fields[i].type]
       }
+    }
 
-      if (i == 'id') {
-        fields[i].primaryKey = true
-        fields[i].autoIncrement = true
-      }
+    if (fields.hasOwnProperty('id')) {
+      g.log.w(2, `'id' property will be overridden for collection '${name}'`)
+      delete fields['id']
+    }
+
+    if (fields.hasOwnProperty('owner')) {
+      g.log.w(2, `'owner' property will be overridden for collection '${name}'`)
+      delete fields['owner']
+    }
+
+    fields.owner = {
+      type: Sequelize['INTEGER'],
+      defaultValue: 0
     }
 
     var collection = this.store.define(name, fields, {
@@ -102,7 +110,7 @@ module.exports = function(g) {
     
     if (req.session) {
       if (req.session.user) {
-        uid = req.req.session.user.id
+        uid = req.session.user.id
       }
     }
     
@@ -116,7 +124,7 @@ module.exports = function(g) {
   
   verifyPassword (username, password) {
     return new Promise((resolve, reject) => {
-      g.data.store.models.users.findOne({ where: {username: username} }).then((user) => {
+      g.data.store.models.users.findOne({ where: { username: username } }).then((user) => {
         if (bcrypt.compareSync(password, user.password)) {
           resolve()
         } else {

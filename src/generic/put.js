@@ -1,5 +1,5 @@
 module.exports = function genericPut (req, res, next) {
-  let g = req.apiko;
+  let g = req.apiko
   
   var collection = g.ender.endFromReq(req).split('/')[1]
   
@@ -10,7 +10,7 @@ module.exports = function genericPut (req, res, next) {
   }
   
   var data = {}
-  for (let column in g.data.collections[i]) {
+  for (let column in g.data.collections[collection]) {
     if (column !== 'id') {
       data[column] = req.all[column]
     }
@@ -18,15 +18,22 @@ module.exports = function genericPut (req, res, next) {
   
   g.store[collection].find({ where: { id: req.all.id } }).then(record => {
     if (record) {
-      record.project.updateAttributes(data).then(() => {
-        res.status(200)
-        next()
-      }).catch(e => {
-        g.log.w(1, 'Error updating a record in the DB (2):', e)
-        next()
-      })
+      let userId = req.session.user ? req.session.user.id : null
+
+      if (req.checkOwnership === true && record.owner !== userId) {
+        g.log.w(1, "This user doesn't seem to have sufficient rights.")
+        res.error(403, "This user doesn't seem to have sufficient rights.")
+      } else {
+        record.update(data).then(() => {
+          res.status(200)
+          next()
+        }).catch(e => {
+          g.log.w(1, 'Error updating a record in the DB (2):', e)
+          next()
+        })
+      }
     } else {
-      res.setError(404, 'No such record.', 10)
+      res.error(404, 'No such record.', 10)
       next()
     }
   }).catch(e => {

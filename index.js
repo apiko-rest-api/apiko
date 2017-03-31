@@ -1,7 +1,7 @@
-"use strict"
+'use strict'
 // global.g = global // sneaky hack to shorten global.something to g.something
-let g = {};
-const apiko = g;
+let g = {}
+const apiko = g
 
 const bcrypt = require('bcryptjs')
 const http = require('http')
@@ -20,8 +20,12 @@ g.manager = require('./src/manager')(g)
 g.data = require('./src/data')(g)
 
 module.exports = {
+  // access to core props and objects from outside (for user handlers)
+  log: g.log,
+  store: g.data.store,
+
   customEnds: [],
-  
+
   on (route, handler, params) {
     this.customEnds.push({
       route: route,
@@ -45,19 +49,17 @@ module.exports = {
 
   reload (setup) {
     g.manager.load(setup)
-    g.data.sync().then(() => {
+    return g.data.sync().then(() => {
       g.app.httpClose()
       g.ender.reload()
       g.app.loaded()
       g.app.httpListen()
     })
   },
-  
+
   loaded () {
     g.log(2, 'Adding custom endpoint handlers...')
-    
-    console.log(this.customEnds)
-    
+
     for (let i in this.customEnds) {
       if (this.customEnds[i].params) {
         g.ender.on(this.customEnds[i].route, this.customEnds[i].handler, this.customEnds[i].params)
@@ -71,20 +73,22 @@ module.exports = {
     g.app = this
     g.exApp = express()
 
-    g.exApp.use(function(req, res, next) {
-      req.apiko = g;
-      next();
+    g.exApp.use(function (req, res, next) {
+      req.apiko = g
+      next()
     })
     g.exApp.use(cors())
     g.exApp.use(bodyParser.json())
     g.exApp.use(bodyParser.urlencoded({ extended: true }))
-    
-    g.exApp.use('/dev', express.static(__dirname + path.sep + 'devui'))
-    
+
+    g.exApp.use('/dev', express.static(path.join(__dirname, 'devui')))
+
     // sessions
     g.exApp.use(session({
       store: new FileStore(),
-      secret: 'apikosSecret'
+      secret: 'apikosSecret',
+      resave: true,
+      saveUninitialized: false
     }))
 
     // if anybody wants to serve their web using Apiko instead of using a third party web server
@@ -94,15 +98,15 @@ module.exports = {
     g.config.merge(cfg)
     g.manager.init()
     g.data.init()
-    
+
     // a shortcut, use as Apiko.store outside
     g.store = g.data.store.models
 
     this.reload()
-    
+
     return this
   },
-  
+
   hashPassword (password) {
     return bcrypt.hashSync(password, 8)
   }
