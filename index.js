@@ -40,7 +40,7 @@ module.exports = {
     })
     return new Promise((resolve, reject) => {
         g.server.on('listening', () => {
-          resolve()
+          resolve(g)
         })
         g.server.on('error', () => {
           reject()
@@ -110,10 +110,11 @@ module.exports = {
 
     // a shortcut, use as Apiko.store outside
     g.store = g.data.store.models
-
+    let self = this
     return this.reload()
-      .then(() => {
-        return this
+      .then((g) => {
+        self.store = g.data.store.models
+        return self
       })
   },
 
