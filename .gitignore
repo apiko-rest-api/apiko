@@ -39,3 +39,5 @@ jspm_packages
 sessions
 apiko.json
 *.sqlite
+.idea/
+.vscode/
