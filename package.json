@@ -71,10 +71,16 @@
   },
   "description": "Top Secret",
   "devDependencies": {
+    "chai": "^3.5.0",
     "eslint": "^3.18.0",
     "eslint-config-standard": "^7.1.0",
+    "eslint-plugin-mocha": "^4.9.0",
     "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^2.1.1"
+    "eslint-plugin-standard": "^2.1.1",
+    "mocha": "^3.2.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.2.0",
+    "sinon": "^2.1.0"
   },
   "directories": {},
   "dist": {
@@ -103,8 +109,11 @@
     "type": "git",
     "url": "git+https://github.com/kasp1/apiko.git"
   },
+  "engines": {
+    "node": ">= 7.6.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/"
   },
   "version": "0.2.0"
 }
