@@ -285,6 +285,32 @@ module.exports = {
         10: 'No user with such id'
       },
       'response': {}
+    },
+    'POST /users/password/reset/:id': {
+      extendable: true,
+      comment: 'Attempts to reset a user password (according to specified user ID).',
+      ownership: true,
+      restrict: 'admin', // only the user themself and an admin can change their password
+      params: {
+        id: {
+          required: true,
+          regex: '^\\d{1,10}$',
+          comment: 'User ID of whom password is being changed.'
+        }
+      },
+      handlers: {
+        core: './users/passwordreset'
+      },
+      errors: {
+        10: 'No user with such id'
+      },
+      'response': {
+        'new': {
+          'present': 'always',
+          'type': 'string',
+          'comment': "A new random password"
+        }
+      }
     }
   }
 }
