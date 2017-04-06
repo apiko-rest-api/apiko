@@ -38,6 +38,14 @@ module.exports = {
     g.server.listen(g.config.port, () => {
       g.log(1, 'Listening @', g.config.port)
     })
+    return new Promise((resolve, reject) => {
+        g.server.on('listening', () => {
+          resolve(g)
+        })
+        g.server.on('error', () => {
+          reject()
+        })
+      })
   },
 
   httpClose () {
@@ -49,12 +57,13 @@ module.exports = {
 
   reload (setup) {
     g.manager.load(setup)
-    return g.data.sync().then(() => {
-      g.app.httpClose()
-      g.ender.reload()
-      g.app.loaded()
-      g.app.httpListen()
-    })
+    return g.data.sync()
+      .then(() => {
+        g.app.httpClose()
+        g.ender.reload()
+        g.app.loaded()
+        return g.app.httpListen()
+      })
   },
 
   loaded () {
@@ -101,10 +110,12 @@ module.exports = {
 
     // a shortcut, use as Apiko.store outside
     g.store = g.data.store.models
-
-    this.reload()
-
-    return this
+    let self = this
+    return this.reload()
+      .then((g) => {
+        self.store = g.data.store.models
+        return self
+      })
   },
 
   hashPassword (password) {
