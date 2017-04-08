@@ -21,7 +21,7 @@ async function changePasswordAsync (req, res, next) {
     const user = await findUser(req)
     let isAdmin = false
     if (req.session.user) {
-      isAdmin = req.session.user.role.split(',').contains('admin')
+      isAdmin = req.session.user.role.split(',').includes('admin')
     }
     if (!(isAdmin || req.all.secret === req.apiko.manager.setup.secret)) {
       await comparePassword(user, req.all.old)
