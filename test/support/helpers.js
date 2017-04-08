@@ -1,6 +1,6 @@
 const createUser = async (apiko, username, password, role) => {
   return apiko.store.users.create({
-    username: username || 'testuser',
+    username: username || 'testuser@apiko.org',
     password: apiko.hashPassword(password || 'TestPassword1'),
     role: role || 'admin'
   })
