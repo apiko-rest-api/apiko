@@ -367,7 +367,7 @@ module.exports = function (g) {
           var userRoles = req.session.user.role.split(',')
 
           var hasOne = false
-          for (let i in endpoint.restrict) {
+          for (let i in endpoint.restrict.split(',')) {
             if (userRoles.indexOf(endpoint.restrict[i]) >= 0) {
               hasOne = true
             }
