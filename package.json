@@ -113,7 +113,7 @@
     "node": ">= 7.6.0"
   },
   "scripts": {
-    "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/"
+    "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/ --timeout 15000"
   },
   "version": "0.2.0"
 }
