@@ -1,5 +1,5 @@
 'use strict'
-const { createUser, truncateUsers, loginOpts, postOptions} = require('./support/helpers')
+const { createUser, truncateUsers, loginOpts, postOptions } = require('./support/helpers')
 let rp = require('request-promise')
 let expect = require('chai').expect
 const bcrypt = require('bcryptjs')
@@ -37,11 +37,11 @@ describe('users', () => {
     })
 
     it('non existing user should sent 404', async () => {
-        await createUser(apiko)
-        const response = await rp(postOptions('http://127.0.0.1:5000/users/password/change/9999999', { secret: apikoOpts.secret }))
-        await truncateUsers(apiko)
+      await createUser(apiko)
+      const response = await rp(postOptions('http://127.0.0.1:5000/users/password/change/9999999', { secret: apikoOpts.secret }))
+      await truncateUsers(apiko)
 
-        expect(response.statusCode).to.equal(404)
+      expect(response.statusCode).to.equal(404)
     })
 
     it('incorrect old password should sent 401', async () => {
@@ -62,9 +62,9 @@ describe('users', () => {
 
       let response = await rp(loginOpts({ username: user.username, password: 'TestPassword1' }))
       expect(response.statusCode).to.equal(200)
-      let postOpts = postOptions('http://127.0.0.1:5000/users/password/change/' + user.id, { token: response.body.token})
+      let postOpts = postOptions('http://127.0.0.1:5000/users/password/change/' + user.id, { token: response.body.token })
       response = await rp(postOpts)
-      await  truncateUsers(apiko)
+      await truncateUsers(apiko)
 
       expect(response.statusCode).to.equal(200)
     })
