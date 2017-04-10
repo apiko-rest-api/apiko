@@ -1,5 +1,8 @@
 # apiko
 
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg?style=flat-square)](https://github.com/apiko-rest-api/apiko)
+[![node](https://img.shields.io/node/v/gh-badges.svg?style=flat-square)](https://github.com/apiko-rest-api/apiko)
+
 > Apiko developer UI.
 
 ## About
