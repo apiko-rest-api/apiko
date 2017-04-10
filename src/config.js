@@ -25,7 +25,7 @@ module.exports = function(g){
     merge (cfg) {
       g.log(2, 'Merging configs...')
 
-      if (cfg.verbosity) {
+      if (cfg.hasOwnProperty('verbosity')) {
         if ((cfg.verbosity >= 0) && (cfg.verbosity <= 3)) {
           g.config.verbosity = cfg.verbosity
         } else {
