@@ -1,5 +1,6 @@
+'use strict'
 module.exports = function genericGetOne (req, res, next) {
-  let g = req.apiko;
+  let g = req.apiko
 
   g.store.users.findOne({
     where: {

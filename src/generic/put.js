@@ -1,21 +1,22 @@
+'use strict'
 module.exports = function genericPut (req, res, next) {
   let g = req.apiko
-  
+
   var collection = g.ender.endFromReq(req).split('/')[1]
-  
+
   g.log(3, 'Generic PUT /' + collection + '/:id')
-  
+
   if (!g.store[collection]) {
     res.setError(404, 'Undefined collection.', 6)
   }
-  
+
   var data = {}
   for (let column in g.data.collections[collection]) {
     if (column !== 'id') {
       data[column] = req.all[column]
     }
   }
-  
+
   g.store[collection].find({ where: { id: req.all.id } }).then(record => {
     if (record) {
       let userId = req.session.user ? req.session.user.id : null

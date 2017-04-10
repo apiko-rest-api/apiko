@@ -1,3 +1,4 @@
+'use strict'
 const bcrypt = require('bcryptjs')
 const { NoUserWithIdError, IncorrectOldPasswordError } = require('../errors')
 

@@ -1,6 +1,7 @@
+'use strict'
 const path = require('path')
 
-module.exports = function(g){ 
+module.exports = function (g) {
   return {
     // Default configuration values
     maintainBrowserTab: false,
@@ -73,7 +74,7 @@ module.exports = function(g){
               g.config.db.pass = cfg.db.pass
             }
 
-            if (cfg.db.dialect == 'sqlite') {
+            if (cfg.db.dialect === 'sqlite') {
               if (cfg.db.storage) {
                 if (path.isAbsolute(cfg.db.storage)) {
                   g.config.db.storage = cfg.db.storage
@@ -103,7 +104,7 @@ module.exports = function(g){
 
             g.config.db.dialect = cfg.db.dialect
           } else {
-            log.e(1, 'Configuration property db.dialect must have one of these values:', dbs)
+            g.log.e(1, 'Configuration property db.dialect must have one of these values:', dbs)
             process.exit(1)
           }
         } else {
@@ -118,7 +119,7 @@ module.exports = function(g){
 
           if (cfg.ws.port) {
             if (parseInt(cfg.ws.port)) {
-              if (cfg.ws.port != g.config.port) {
+              if (cfg.ws.port !== g.config.port) {
                 g.config.ws.port = cfg.ws.port
               } else {
                 g.log.e(1, 'Configuration property ws.port can\'t have the same value as configuration property port. Going with default:', g.config.ws.port)

@@ -1,5 +1,4 @@
 'use strict'
-
 const deepmerge = require('deepmerge')
 const path = require('path')
 

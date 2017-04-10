@@ -1,5 +1,4 @@
-"use strict"
-
+'use strict'
 const colors = require('colors/safe')
 
 //
@@ -18,7 +17,7 @@ const colors = require('colors/safe')
 // g.log.e(loglevel, any number of args here as this was console.error)
 //
 
-var apiko;
+var apiko
 
 var log = function () {
   var args = Array.prototype.slice.call(arguments)
@@ -67,12 +66,12 @@ log.d = function () {
   console.error.apply(console, args)
 }
 
-module.exports = function(g) {
-  apiko = g;
+module.exports = function (g) {
+  apiko = g
   return log
 }
 
-function timestamp() {
+function timestamp () {
   var time = new Date()
   var hours = ((time.getHours() < 10) ? '0' + time.getHours() : time.getHours())
   var minutes = ((time.getMinutes() < 10) ? '0' + time.getMinutes() : time.getMinutes())
@@ -80,11 +79,11 @@ function timestamp() {
   var millis = time.getMilliseconds()
 
   if ((millis < 100) && (millis >= 10)) {
-    millis = '0'+millis
+    millis = '0' + millis
   }
 
   if (millis < 10) {
-    millis = '00'+millis
+    millis = '00' + millis
   }
 
   return hours + ':' + minutes + ':' + seconds + '.' + millis
