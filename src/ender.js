@@ -13,10 +13,10 @@ module.exports = function (g) {
       this.endpoints = deepmerge.all([this.genericCollectionEndpoints(), g.core.endpoints, g.manager.setup.endpoints])
 
       // register all endpoint handlers
-      var route
+      let route
       for (let i in this.endpoints) {
         route = i.split(' ')
-        var method = route[0].toLowerCase()
+        let method = route[0].toLowerCase()
         route = g.config.prefixed(route[1])
 
         // extend handler arguments with Apiko specific API
@@ -66,9 +66,9 @@ module.exports = function (g) {
     },
 
     addHandling (end, handler) {
-      var route = end.split(' ')
-      var method = route[0].toLowerCase()
-      var unprefixedRoute = route[1]
+      let route = end.split(' ')
+      let method = route[0].toLowerCase()
+      let unprefixedRoute = route[1]
       route = g.config.prefixed(route[1])
 
       g.log(2, 'Registering a handler for:', method.toUpperCase(), unprefixedRoute)
@@ -115,9 +115,9 @@ module.exports = function (g) {
     },
 
     genericCollectionEndpoints () {
-      var genericEndpoints = {}
-      var postParams
-      // var putParams
+      let genericEndpoints = {}
+      let postParams
+      // let putParams
 
       for (let i in g.data.collections) {
         // GET for every collection
@@ -235,7 +235,7 @@ module.exports = function (g) {
           }
 
           if (req.endpoint.params[i].regex && (req.all[i] !== undefined) && (req.all[i] !== '') && !res.headersSent) {
-            var regex = new RegExp(req.endpoint.params[i].regex)
+            let regex = new RegExp(req.endpoint.params[i].regex)
             if (!regex.test(req.all[i])) {
               g.log.w(3, 'The', i, "parameter is in an incorrect format (no regex match): '" + req.all[i] + "' Regex:", regex)
               if (!res.headersSent) {
@@ -255,7 +255,7 @@ module.exports = function (g) {
     },
 
     extendWithApi (req, res, next) {
-      var end = g.ender.endFromReq(req)
+      let end = g.ender.endFromReq(req)
       g.log(2, 'Extending', end, 'with API...')
 
       req.endpoint = g.ender.endpoints[end]
@@ -278,7 +278,7 @@ module.exports = function (g) {
         res.type('application/json')
 
         if (customMessage || customCode) {
-          var body = {}
+          let body = {}
 
           if (customCode) {
             body.code = customCode
@@ -302,7 +302,7 @@ module.exports = function (g) {
         res.status(httpCode)
         res.type('application/json')
 
-        var body = {}
+        let body = {}
         if (customMessage || customCode) {
           if (customCode) {
             body.code = customCode
@@ -351,8 +351,8 @@ module.exports = function (g) {
         return
       }
 
-      var end = g.ender.endFromReq(req)
-      var endpoint = g.ender.endpoints[end]
+      let end = g.ender.endFromReq(req)
+      let endpoint = g.ender.endpoints[end]
 
       if (endpoint.restrict) {
         if (!req.session.user) {
@@ -363,9 +363,9 @@ module.exports = function (g) {
         if (endpoint.restrict === true) {
           req.checkOwnership = endpoint.ownership
         } else {
-          var userRoles = req.session.user.role.split(',')
+          let userRoles = req.session.user.role.split(',')
 
-          var hasOne = false
+          let hasOne = false
           for (let i in endpoint.restrict.split(',')) {
             if (userRoles.indexOf(endpoint.restrict[i]) >= 0) {
               hasOne = true
@@ -402,7 +402,7 @@ module.exports = function (g) {
     },
 
     endFromReq (req) {
-      var end = (req.method.toUpperCase() + ' ' + req.route.path)
+      let end = (req.method.toUpperCase() + ' ' + req.route.path)
 
       if (g.config.prefix) {
         end = end.replace('/' + g.config.prefix, '')

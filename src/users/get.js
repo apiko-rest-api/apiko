@@ -1,7 +1,7 @@
 'use strict'
 module.exports = function genericGet (req, res, next) {
   let g = req.apiko
-  var opts = {}
+  let opts = {}
 
   if (req.all.where) {
     try {

@@ -9,8 +9,8 @@ module.exports = function (req, res, next) {
     }
   }
 
-  var startDate = parseInt(req.all.start) || new Date().setDate(new Date().getDate() - 30).valueOf()
-  var endDate = parseInt(req.all.end) || new Date().valueOf()
+  let startDate = parseInt(req.all.start) || new Date().setDate(new Date().getDate() - 30).valueOf()
+  let endDate = parseInt(req.all.end) || new Date().valueOf()
 
   g.store.stats.belongsTo(g.store.users, { 'foreignKey': 'uid' })
 

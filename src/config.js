@@ -58,7 +58,7 @@ module.exports = function (g) {
       }
 
       if (cfg.db) {
-        var dbs = ['sqlite', 'mysql', 'mariadb', 'postgres', 'mssql']
+        let dbs = ['sqlite', 'mysql', 'mariadb', 'postgres', 'mssql']
 
         if (cfg.db.dialect) {
           if (dbs.indexOf(cfg.db.dialect) >= 0) {

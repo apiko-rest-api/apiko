@@ -18,7 +18,7 @@ module.exports = function (req, res, next) {
 
 let renderer = {
   renderDocs () {
-    var content = '<h1 class="title is-1" style="text-align: center;">API Reference</h1>'
+    let content = '<h1 class="title is-1" style="text-align: center;">API Reference</h1>'
 
     content += '<section style="margin-bottom: 40px"><h3>Table of Contents</h3><table><tbody>'
 
@@ -27,7 +27,7 @@ let renderer = {
     }
     content += '<tbody></table></section>'
 
-    var end, restriction
+    let end, restriction
     for (let endpoint in this.g.ender.endpoints) {
       end = this.g.ender.endpoints[endpoint]
 
@@ -48,10 +48,10 @@ let renderer = {
           content += '<p>' + end.comment + '</p>'
         }
 
-        var endpointDetail = ''
+        let endpointDetail = ''
 
         if (end.params) {
-          var params = ''
+          let params = ''
           for (let param in end.params) {
             params += this.apply('endpointParamsRow', {
               param: param,
@@ -66,7 +66,7 @@ let renderer = {
         }
 
         if (end.response) {
-          var response = ''
+          let response = ''
           for (let property in end.response) {
             response += this.apply('endpointResponseRow', {
               property: property,
@@ -81,7 +81,7 @@ let renderer = {
         }
 
         if (end.errors) {
-          var errors = ''
+          let errors = ''
           for (let error in end.errors) {
             errors += this.apply('endpointErrorsRow', {
               id: error,
@@ -107,7 +107,7 @@ let renderer = {
   },
 
   renderError () {
-    var content = '<h1 class="title">Access Denied</h1>'
+    let content = '<h1 class="title">Access Denied</h1>'
     content += '<p>This server is protected by a secret that has to be supplied in the \'secret\' parameter. (Error 3)</p>'
 
     content = this.apply('errorWrapper', { content: content })
@@ -116,7 +116,7 @@ let renderer = {
   },
 
   apply (template, opts) {
-    var tpl = this.templates[template]
+    let tpl = this.templates[template]
 
     if (tpl) {
       for (let label in opts) {

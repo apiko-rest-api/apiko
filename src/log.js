@@ -11,16 +11,16 @@ const colors = require('colors/safe')
 //
 // Usage:
 //
-// var log = require('./log')
+// let log = require('./log')
 // g.log(loglevel, any number of args here as this was console.log)
 // g.log.w(loglevel, any number of args here as this was console.warn)
 // g.log.e(loglevel, any number of args here as this was console.error)
 //
 
-var apiko
+let apiko
 
-var log = function () {
-  var args = Array.prototype.slice.call(arguments)
+let log = function () {
+  let args = Array.prototype.slice.call(arguments)
 
   if (args[0] <= apiko.config.verbosity) {
     args[0] = '[APIKO LOG ' + timestamp() + ']'
@@ -29,7 +29,7 @@ var log = function () {
 }
 
 log.w = function () {
-  var args = Array.prototype.slice.call(arguments)
+  let args = Array.prototype.slice.call(arguments)
 
   if (args[0] <= apiko.config.verbosity) {
     args[0] = '[APIKO WRN ' + timestamp() + ']'
@@ -43,7 +43,7 @@ log.w = function () {
 }
 
 log.e = function () {
-  var args = Array.prototype.slice.call(arguments)
+  let args = Array.prototype.slice.call(arguments)
 
   if (args[0] <= apiko.config.verbosity) {
     args[0] = '[APIKO ERR ' + timestamp() + ']'
@@ -57,7 +57,7 @@ log.e = function () {
 }
 
 log.d = function () {
-  var args = Array.prototype.slice.call(arguments)
+  let args = Array.prototype.slice.call(arguments)
 
   for (let i in args) {
     args[i] = colors.bold(args[i])
@@ -72,11 +72,11 @@ module.exports = function (g) {
 }
 
 function timestamp () {
-  var time = new Date()
-  var hours = ((time.getHours() < 10) ? '0' + time.getHours() : time.getHours())
-  var minutes = ((time.getMinutes() < 10) ? '0' + time.getMinutes() : time.getMinutes())
-  var seconds = ((time.getSeconds() < 10) ? '0' + time.getSeconds() : time.getSeconds())
-  var millis = time.getMilliseconds()
+  let time = new Date()
+  let hours = ((time.getHours() < 10) ? '0' + time.getHours() : time.getHours())
+  let minutes = ((time.getMinutes() < 10) ? '0' + time.getMinutes() : time.getMinutes())
+  let seconds = ((time.getSeconds() < 10) ? '0' + time.getSeconds() : time.getSeconds())
+  let millis = time.getMilliseconds()
 
   if ((millis < 100) && (millis >= 10)) {
     millis = '0' + millis

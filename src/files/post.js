@@ -9,7 +9,7 @@ module.exports = function (req, res, next) {
   let uploadedFiles = []
 
   // create an incoming form object
-  var form = new formidable.IncomingForm()
+  let form = new formidable.IncomingForm()
 
   // specify that we want to allow the user to upload multiple files in a single request
   form.multiples = true

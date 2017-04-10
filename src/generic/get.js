@@ -2,7 +2,7 @@
 module.exports = function genericGet (req, res, next) {
   let g = req.apiko
 
-  var collection = g.ender.endFromReq(req).split('/')[1]
+  let collection = g.ender.endFromReq(req).split('/')[1]
 
   g.log(3, 'Generic GET /' + collection)
 
@@ -10,7 +10,7 @@ module.exports = function genericGet (req, res, next) {
     res.setError(404, 'Undefined collection.', 6)
   }
 
-  var opts = {}
+  let opts = {}
 
   if (req.all.where) {
     try {

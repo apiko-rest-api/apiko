@@ -3,9 +3,9 @@ module.exports = function (req, res, next) {
   let g = req.apiko
 
   g.log(2, 'Registering a user...')
-  var password = g.app.hashPassword(req.all.password)
+  let password = g.app.hashPassword(req.all.password)
 
-  var defaults = {
+  let defaults = {
     where: { username: req.all.username },
     defaults: { password: password, name: req.all.name }
   }

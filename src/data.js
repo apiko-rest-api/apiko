@@ -30,10 +30,10 @@ module.exports = function (g) {
 
     sync () {
       g.log(2, 'Synchronizing database...')
-      var promises = []
+      let promises = []
 
     // very core collections (not even public)
-      var statsP = this.addCollection('stats', {
+      let statsP = this.addCollection('stats', {
         endpoint: { type: 'STRING 255' },
         ip: { type: 'STRING 45' },
         uid: { type: 'INTEGER' }
@@ -54,7 +54,7 @@ module.exports = function (g) {
 
     // create models for the merged collections
 
-      var publicP
+      let publicP
       for (let i in this.collections) {
         publicP = this.addCollection(i, this.collections[i])
 
@@ -95,7 +95,7 @@ module.exports = function (g) {
         defaultValue: 0
       }
 
-      var collection = this.store.define(name, fields, {
+      let collection = this.store.define(name, fields, {
         freezeTableName: true // Model tableName will be the same as the model name
       })
 
@@ -105,7 +105,7 @@ module.exports = function (g) {
     logRequest (req, res, next) {
       g.log(3, 'Logging a request...')
 
-      var uid = 0
+      let uid = 0
 
       if (req.session) {
         if (req.session.user) {

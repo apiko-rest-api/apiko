@@ -2,7 +2,7 @@
 module.exports = function genericPut (req, res, next) {
   let g = req.apiko
 
-  var collection = g.ender.endFromReq(req).split('/')[1]
+  let collection = g.ender.endFromReq(req).split('/')[1]
 
   g.log(3, 'Generic PUT /' + collection + '/:id')
 
@@ -10,7 +10,7 @@ module.exports = function genericPut (req, res, next) {
     res.setError(404, 'Undefined collection.', 6)
   }
 
-  var data = {}
+  let data = {}
   for (let column in g.data.collections[collection]) {
     if (column !== 'id') {
       data[column] = req.all[column]

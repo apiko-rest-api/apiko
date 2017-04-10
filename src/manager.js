@@ -78,10 +78,10 @@ module.exports = function (g) {
     },
 
     genSecret () {
-      var allowed = 'abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-      var secret = ''
+      let allowed = 'abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+      let secret = ''
 
-      for (var n = 0; n < 30; n++) {
+      for (let n = 0; n < 30; n++) {
         secret += allowed[Math.floor(Math.random() * allowed.length)]
       }
 
