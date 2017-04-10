@@ -1,5 +1,5 @@
 'use strict'
-module.exports = function genericGetOne (req, res, next) {
+module.exports = function genericGetOne (req, res) {
   let g = req.apiko
 
   g.store.users.findOne({
@@ -18,6 +18,7 @@ module.exports = function genericGetOne (req, res, next) {
     }
   })
   .catch(e => {
+    g.log(3, e)
     res.error(400, 'Can\'t get user')
   })
 }
