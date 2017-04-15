@@ -1,3 +1,12 @@
+Apiko
+===
+
+[![Travis](https://img.shields.io/travis/apiko-rest-api/apiko.svg?style=flat-square)](https://travis-ci.org/apiko-rest-api/apiko)
+[![node](https://img.shields.io/badge/node->%3D%207.6.0-brightgreen.svg?style=flat-square)](https://github.com/apiko-rest-api/apiko)
+[![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg?style=flat-square)](https://gitter.im/Apiko-Rest-API/Lobby?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+
+> Apiko developer UI.
+
 ## About
 
 Apiko is a REST API tool that helps you to setup a backend server as easily as possible. Apiko should gives you an interface to:

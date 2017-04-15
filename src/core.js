@@ -1,3 +1,4 @@
+'use strict'
 module.exports = {
   collections: {
     users: {
@@ -308,7 +309,7 @@ module.exports = {
         'new': {
           'present': 'always',
           'type': 'string',
-          'comment': "A new random password"
+          'comment': 'A new random password'
         }
       }
     }

@@ -1,3 +1,4 @@
+'use strict'
 class NoUserWithIdError extends Error {
   constructor () {
     super()
