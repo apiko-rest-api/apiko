@@ -268,7 +268,7 @@ module.exports = {
           regex: '^\\d{1,10}$',
           comment: 'User ID of whom password is being changed.'
         },
-        old: {
+        current: {
           required: true,
           comment: 'The specified user\'s old password.'
         },
