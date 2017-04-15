@@ -98,7 +98,7 @@ module.exports = function (g) {
         freezeTableName: true // Model tableName will be the same as the model name
       })
 
-      return collection.sync({ force: false }) // force: true drops & recreates tables every run
+      return collection.sync({ force: false, alter: process.env.NODE_ENV !== 'prod' }) // force: true drops & recreates tables every run
     },
 
     logRequest (req, res, next) {
