@@ -12,7 +12,6 @@ describe('users', () => {
       const config = { port: 5000, verbosity: 0 }
       apiko = await require('../').run(config)
       apikoOpts = require('../apiko.json')
-      // await apiko.reload()
     })
 
     afterEach(() => {
