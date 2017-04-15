@@ -1,5 +1,4 @@
 'use strict'
-const bcrypt = require('bcryptjs')
 const deepmerge = require('deepmerge')
 const Sequelize = require('sequelize')
 
@@ -119,21 +118,6 @@ module.exports = function (g) {
         uid: uid
       })
       next()
-    },
-
-    // TODO: This function is never used and contains linting errors!
-    verifyPassword (username, password) {
-      return new Promise((resolve, reject) => {
-        g.data.store.models.users.findOne({ where: { username: username } }).then((user) => {
-          if (bcrypt.compareSync(password, user.password)) {
-            resolve()
-          } else {
-            reject()
-          }
-        }).catch(() => {
-          reject()
-        })
-      })
     }
   }
 }
