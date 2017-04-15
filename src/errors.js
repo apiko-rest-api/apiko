@@ -44,10 +44,26 @@ class NoAdminUserWithId extends Error {
   }
 }
 
+class EmptyHandler extends Error {
+  constructor () {
+    super()
+    this.message = 'The handler of this endpoint is empty'
+    this.name = 'EmptyHandler'
+    this.errorCode = 50
+    this.statusCode = 501
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, EmptyHandler)
+    } else {
+      this.stack = (new Error()).stack
+    }
+  }
+}
+
 let ret = {
-  NoUserWithIdError: NoUserWithIdError,
-  IncorrectCurrentPasswordError: IncorrectCurrentPasswordError,
-  NoAdminUserWithId: NoAdminUserWithId
+  NoUserWithIdError,
+  IncorrectCurrentPasswordError,
+  NoAdminUserWithId,
+  EmptyHandler
 }
 
 module.exports = ret
