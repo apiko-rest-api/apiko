@@ -39,13 +39,13 @@ module.exports = {
       g.log(1, 'Listening @', g.config.port)
     })
     return new Promise((resolve, reject) => {
-        g.server.on('listening', () => {
-          resolve(g)
-        })
-        g.server.on('error', () => {
-          reject()
-        })
+      g.server.on('listening', () => {
+        resolve(g)
       })
+      g.server.on('error', (e) => {
+        reject(e)
+      })
+    })
   },
 
   httpClose () {
