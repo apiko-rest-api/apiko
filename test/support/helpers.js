@@ -33,7 +33,7 @@ const postOptions = (uri, body) => {
     method: 'POST',
     uri: uri,
     body: {
-      old: body.old || 'TestPassword1',
+      current: body.current || 'TestPassword1',
       new: body.new || 'NewTestPassword1'
     },
     resolveWithFullResponse: true,

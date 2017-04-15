@@ -14,15 +14,30 @@ class NoUserWithIdError extends Error {
   }
 }
 
-class IncorrectOldPasswordError extends Error {
+class IncorrectCurrentPasswordError extends Error {
   constructor () {
     super()
-    this.message = 'Incorrect old password.'
-    this.name = 'IncorrectOldPasswordError'
+    this.message = 'Incorrect current password.'
+    this.name = 'IncorrectCurrentPasswordError'
     this.errorCode = 7
     this.statusCode = 401
     if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, IncorrectOldPasswordError)
+      Error.captureStackTrace(this, IncorrectCurrentPasswordError)
+    } else {
+      this.stack = (new Error()).stack
+    }
+  }
+}
+
+class NoAdminUserWithId extends Error {
+  constructor () {
+    super()
+    this.message = 'There is no Admin user with such id.'
+    this.name = 'NoAdminUserWithId'
+    this.errorCode = 15
+    this.statusCode = 404
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, NoAdminUserWithId)
     } else {
       this.stack = (new Error()).stack
     }
@@ -31,7 +46,8 @@ class IncorrectOldPasswordError extends Error {
 
 let ret = {
   NoUserWithIdError: NoUserWithIdError,
-  IncorrectOldPasswordError: IncorrectOldPasswordError
+  IncorrectCurrentPasswordError: IncorrectCurrentPasswordError,
+  NoAdminUserWithId: NoAdminUserWithId
 }
 
 module.exports = ret
