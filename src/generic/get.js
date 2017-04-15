@@ -27,11 +27,12 @@ module.exports = function genericGet (req, res, next) {
   }
 
   if (req.all.limit) {
-    opts.limit = req.all.limit
+    console.log(req.all.limit)
+    opts.limit = parseInt(req.all.limit)
   }
 
   if (req.all.offset) {
-    opts.offset = req.all.offset
+    opts.offset = parseInt(req.all.offset)
   }
 
   if (req.all.order) {
