@@ -52,10 +52,12 @@ module.exports = function (g) {
               }
             }
           } else {
-            g.log.w(0, 'Endpoint ', i, 'is registered with no handler! (2)')
+            g.log.w(2, 'Endpoint ', i, 'is registered with no handler! (2)')
+            this.addHandling(i, require('./empty-handler'))
           }
         } else {
-          g.log.w(0, 'Endpoint ', i, 'is registered with no handler! (1)')
+          g.log.w(2, 'Endpoint ', i, 'is registered with no handler! (1)')
+          this.addHandling(i, require('./empty-handler'))
         }
 
         // a checker that eventually sends the response if nothing else in the chain does
