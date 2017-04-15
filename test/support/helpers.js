@@ -1,3 +1,4 @@
+'use strict'
 const createUser = async (apiko, opts) => {
   if (!opts) opts = {}
   return apiko.store.users.create({
@@ -33,7 +34,7 @@ const postOptions = (uri, body) => {
     uri: uri,
     body: {
       old: body.old || 'TestPassword1',
-      new: body.new || 'NewTestPassword1',
+      new: body.new || 'NewTestPassword1'
     },
     resolveWithFullResponse: true,
     json: true,

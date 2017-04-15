@@ -1,10 +1,11 @@
+'use strict'
 const path = require('path')
 const fs = require('fs')
 
 module.exports = function (req, res, next) {
   let g = req.apiko
   let filesDir = process.cwd() + path.sep + g.config.filesDirectory + path.sep
-  
+
   g.store.files.findOne({ where: {id: req.all.id} }).then(record => {
     if (record) {
       if (fs.existsSync(filesDir + record.id)) {
@@ -20,7 +21,7 @@ module.exports = function (req, res, next) {
     } else {
       res.setError(404, 'No such file.', 10)
     }
-  
+
     next()
   }).catch(e => {
     next()
