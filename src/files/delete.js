@@ -1,10 +1,11 @@
+'use strict'
 const path = require('path')
 const fs = require('fs')
 
 module.exports = function genericDelete (req, res, next) {
   let g = req.apiko
   let filesDir = process.cwd() + path.sep + g.config.filesDirectory + path.sep
-  
+
   g.store.files.destroy({ where: { id: req.all.id } }).then(success => {
     if (success) {
       if (fs.existsSync(filesDir + req.all.id)) {
