@@ -43,13 +43,13 @@ describe('users', () => {
       expect(response.statusCode).to.equal(404)
     })
 
-    it('incorrect old password should sent 401', async () => {
+    it('incorrect current password should sent 401', async () => {
       const user = await createUser(apiko, { role: 'user' })
 
       let response = await rp(loginOpts({ username: user.username }))
       expect(response.statusCode).to.equal(200)
 
-      let postOpts = postOptions('http://127.0.0.1:5000/users/password/change/' + user.id, { old: 'IncorrectPassword', token: response.body.token })
+      let postOpts = postOptions('http://127.0.0.1:5000/users/password/change/' + user.id, { current: 'IncorrectPassword', token: response.body.token })
       response = await rp(postOpts)
       await truncateUsers(apiko)
 
@@ -62,6 +62,22 @@ describe('users', () => {
       let response = await rp(loginOpts({ username: user.username, password: 'TestPassword1' }))
       expect(response.statusCode).to.equal(200)
       let postOpts = postOptions('http://127.0.0.1:5000/users/password/change/' + user.id, { token: response.body.token })
+      response = await rp(postOpts)
+      await truncateUsers(apiko)
+
+      expect(response.statusCode).to.equal(200)
+    })
+
+    it('Admin change password of user should be 200', async () => {
+      const user = await createUser(apiko, { username: 'testuser@apiko.org', password: 'TestPassword1', role: 'moderator' })
+      const adminUser = await createUser(apiko, { username: 'adminuser@apiko.org', password: 'AdminPassword1', role: 'admin' })
+
+      let response = await rp(loginOpts({ username: adminUser.username, password: 'AdminPassword1' }))
+      expect(response.statusCode).to.equal(200)
+
+      let postOpts = postOptions('http://127.0.0.1:5000/users/password/change/' + user.id,
+        { current: 'AdminPassword1', token: response.body.token })
+
       response = await rp(postOpts)
       await truncateUsers(apiko)
 
