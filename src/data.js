@@ -40,6 +40,7 @@ module.exports = function (g) {
 
       statsP.then(() => {
         g.log(3, 'Structure of stats synchronized.')
+        return Promise.resolve()
       }).catch(error => {
         g.log.w(2, 'Structure sync error (stats):', error)
       })
@@ -59,6 +60,7 @@ module.exports = function (g) {
 
         publicP.then(() => {
           g.log(2, 'Structure of', i, 'synchronized.')
+          return Promise.resolve()
         }).catch(error => {
           g.log.w(1, 'Structure sync error (', i, '):', error)
         })

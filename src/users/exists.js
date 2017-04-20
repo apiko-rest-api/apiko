@@ -13,6 +13,7 @@ module.exports = function genericGetOne (req, res, next) {
     } else {
       res.success({ exists: false })
     }
+    return Promise.resolve()
   })
   .catch(e => {
     res.error(400, 'Can\'t check if user exists')

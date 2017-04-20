@@ -29,6 +29,7 @@ module.exports = function (req, res, next) {
     } else {
       res.success(stats)
     }
+    return Promise.resolve()
   })
   .catch(function (err) {
     g.log(2, err)
