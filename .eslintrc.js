@@ -3,7 +3,7 @@ module.exports = {
     "node": true,
     "mocha": true
   },
-  "extends": "standard",
+  "extends": ["standard", "plugin:promise/recommended"],
   "plugins": [
     "mocha",
     "chai-expect",

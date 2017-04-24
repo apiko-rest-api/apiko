@@ -28,6 +28,7 @@ module.exports = function genericPut (req, res, next) {
         record.update(data).then(() => {
           res.status(200)
           next()
+          return Promise.resolve()
         }).catch(e => {
           g.log.w(1, 'Error updating a record in the DB (2):', e)
           next()
@@ -37,6 +38,7 @@ module.exports = function genericPut (req, res, next) {
       res.error(404, 'No such record.', 10)
       next()
     }
+    return Promise.resolve()
   }).catch(e => {
     g.log.w(1, 'Error updating a record in the DB (1):', e)
     res.status(400)
