@@ -60,8 +60,8 @@ module.exports = {
     return g.data.sync()
       .then(() => {
         g.app.httpClose()
-        g.ender.reload()
         g.app.loaded()
+        g.ender.reload()
         return g.app.httpListen()
       })
   },
