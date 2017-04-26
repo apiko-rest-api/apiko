@@ -32,6 +32,7 @@ module.exports = function genericPost (req, res, next) {
     })
 
     next()
+    return Promise.resolve()
   }).catch(e => {
     g.log.w(1, 'Error inserting a record to the DB:', e)
     res.status(400)

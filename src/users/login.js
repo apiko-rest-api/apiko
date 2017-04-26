@@ -34,6 +34,7 @@ module.exports = function (req, res, next) {
     }
 
     next()
+    return Promise.resolve()
   }).catch(() => {
     next()
   })
