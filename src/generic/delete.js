@@ -19,6 +19,7 @@ module.exports = function genericDelete (req, res, next) {
         record.destroy().then(() => {
           res.status(200)
           next()
+          return Promise.resolve()
         }).catch(e => {
           g.log.w(1, 'Error deleting a record in the DB (1):', e)
           res.status(400)
@@ -28,6 +29,7 @@ module.exports = function genericDelete (req, res, next) {
     } else {
       res.error(404, 'No such record.', 10)
     }
+    return Promise.resolve()
   }).catch(e => {
     next()
   })

@@ -16,6 +16,7 @@ module.exports = function genericGetOne (req, res) {
     } else {
       res.error(404, 'No such user')
     }
+    return Promise.resolve()
   })
   .catch(e => {
     g.log(3, e)

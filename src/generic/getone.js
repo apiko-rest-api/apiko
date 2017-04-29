@@ -28,6 +28,7 @@ module.exports = function genericGetOne (req, res, next) {
     }
 
     next()
+    return Promise.resolve()
   }).catch(e => {
     next()
   })
