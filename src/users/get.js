@@ -33,6 +33,7 @@ module.exports = function genericGet (req, res, next) {
 
   g.store.users.findAll(opts).then(users => {
     res.success(users)
+    return Promise.resolve()
   }).catch(e => {
     res.error(404, 'Can\'t get users')
   })

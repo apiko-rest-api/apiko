@@ -56,13 +56,12 @@ module.exports = function (req, res, next) {
         name: uploadedFiles[file].name,
         size: uploadedFiles[file].size
       })
-
-      insert.then(record => {
+      .then(record => {
         fs.renameSync(uploadedFiles[file].path, path.join(form.uploadDir, record.id.toString()))
         finishedFiles.push(JSON.parse(JSON.stringify(record)))
+        return Promise.resolve()
       })
-
-      insert.catch(e => {
+      .catch(e => {
         g.log.w(1, 'Error inserting a file to the DB:', e)
         if (!res.headersSent) {
           res.setError(500, 'The file upload failed. (single file)', 12)
@@ -76,6 +75,13 @@ module.exports = function (req, res, next) {
     Promise.all(dbInsertionPromises).then(() => {
       res.status(200)
       res.body = JSON.stringify(finishedFiles)
+      next()
+      return Promise.resolve()
+    }).catch(e => {
+      g.log(1, e.message)
+      if (!res.headersSent) {
+        res.setError(500, 'The file upload failed. (single file)', 12)
+      }
       next()
     })
   })

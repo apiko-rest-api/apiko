@@ -53,6 +53,7 @@ module.exports = function genericGet (req, res, next) {
     }
 
     next()
+    return Promise.resolve()
   }).catch(e => {
     next()
   })
