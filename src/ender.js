@@ -61,6 +61,26 @@ module.exports = function (g) {
         }
       }
 
+      g.log(2, 'Adding custom endpoint handlers...')
+
+      for (let i in g.app.customEnds) {
+        if (g.app.customEnds[i].params) {
+          g.ender.on(g.app.customEnds[i].route, g.app.customEnds[i].handler, g.app.customEnds[i].params)
+        } else {
+          g.ender.on(g.app.customEnds[i].route, g.app.customEnds[i].handler)
+        }
+        this.addHandling(g.app.customEnds[i].route, g.ender.endIfNotEnded)
+      }
+
+      g.log(2, 'Adding end to all endpoints')
+      for (let i in this.endpoints) {
+        route = i.split(' ')
+        let method = route[0].toLowerCase()
+        route = g.config.prefixed(route[1])
+        // a checker that eventually sends the response if nothing else in the chain does
+        g.exApp[method](route, g.ender.endIfNotEnded)
+      }
+
       g.log(2, 'Core and generic endpoints set up.')
     },
 
