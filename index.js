@@ -62,6 +62,7 @@ module.exports = {
         g.app.httpClose()
         g.ender.reload()
         g.app.loaded()
+        g.ender.automaticEndResponse() // we end only after all custom requests are executed
         return g.app.httpListen()
       })
   },
@@ -75,6 +76,7 @@ module.exports = {
       } else {
         g.ender.on(this.customEnds[i].route, this.customEnds[i].handler)
       }
+      g.ender.addHandling(this.customEnds[i].route, g.ender.endIfNotEnded)
     }
   },
 
