@@ -61,21 +61,8 @@ module.exports = {
       .then(() => {
         g.app.httpClose()
         g.ender.reload()
-        g.app.loaded()
         return g.app.httpListen()
       })
-  },
-
-  loaded () {
-    g.log(2, 'Adding custom endpoint handlers...')
-
-    for (let i in this.customEnds) {
-      if (this.customEnds[i].params) {
-        g.ender.on(this.customEnds[i].route, this.customEnds[i].handler, this.customEnds[i].params)
-      } else {
-        g.ender.on(this.customEnds[i].route, this.customEnds[i].handler)
-      }
-    }
   },
 
   run (cfg) {
