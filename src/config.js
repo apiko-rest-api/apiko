@@ -10,6 +10,7 @@ module.exports = function (g) {
     prefix: '',
     protect: true,
     allowedOrigin: '*',
+    logFile: true,
     ws: {
       open: false,
       port: 5001
@@ -44,6 +45,10 @@ module.exports = function (g) {
 
       if (cfg.protect === false) {
         g.config.protect = cfg.protect
+      }
+
+      if (cfg.logFile === false) {
+        g.config.logFile = cfg.logFile
       }
 
       if (cfg.port) {
