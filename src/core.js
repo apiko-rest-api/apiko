@@ -143,6 +143,17 @@ module.exports = {
         3: 'This server is protected by a secret that has to be supplied in the \'secret\' parameter.'
       }
     },
+    'GET /apiko/log': {
+      extendable: false,
+      comment: 'Retrieves the server\'s log output.',
+      handlers: {
+        core: './apiko/log/get'
+      },
+      errors: {
+        3: 'This server is protected by a secret that has to be supplied in the \'secret\' parameter.',
+        14: 'Log was requested, but apiko.log does not exist. Did you set the logFile configuration property to false?'
+      }
+    },
     'GET /files': {
       extendable: true,
       comment: 'Retrieves a list of all files.'

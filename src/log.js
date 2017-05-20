@@ -1,5 +1,7 @@
 'use strict'
 const colors = require('colors/safe')
+const fs = require('fs')
+const os = require('os')
 
 //
 // Log levels:
@@ -19,12 +21,22 @@ const colors = require('colors/safe')
 
 let apiko
 
+let fileName = 'apiko.log'
+
+if (fs.existsSync(fileName)) {
+  fs.unlinkSync(fileName)
+}
+
 let log = function () {
   let args = Array.prototype.slice.call(arguments)
 
   if (args[0] <= apiko.config.verbosity) {
     args[0] = '[APIKO LOG ' + timestamp() + ']'
     console.log.apply(console, args)
+    
+    if (apiko.config.logFile) {
+      fs.appendFileSync(fileName, args.join(' ') + os.EOL)
+    }
   }
 }
 
@@ -39,6 +51,10 @@ log.w = function () {
     }
 
     console.warn.apply(console, args)
+    
+    if (apiko.config.logFile) {
+      fs.appendFileSync(fileName, args.join(' ') + os.EOL)
+    }
   }
 }
 
@@ -53,6 +69,10 @@ log.e = function () {
     }
 
     console.error.apply(console, args)
+    
+    if (apiko.config.logFile) {
+      fs.appendFileSync(fileName, args.join(' ') + os.EOL)
+    }
   }
 }
 
@@ -64,6 +84,10 @@ log.d = function () {
   }
 
   console.error.apply(console, args)
+    
+  if (apiko.config.logFile) {
+    fs.appendFileSync(fileName, args.join(' ') + os.EOL)
+  }
 }
 
 module.exports = function (g) {
