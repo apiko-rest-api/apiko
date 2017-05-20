@@ -18,7 +18,5 @@ module.exports = function (req, res, next) {
     }
   }).catch(error => {
     g.log.w(1, 'Registration error:', error)
-  })
-
-  next()
+  }).then(next)
 }
