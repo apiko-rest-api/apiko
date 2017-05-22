@@ -91,6 +91,9 @@ module.exports = {
         password: {
           required: true,
           regex: '^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,18}$'
+        },
+        role: {
+          required: false
         }
       },
       handlers: {
