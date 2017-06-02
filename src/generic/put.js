@@ -27,6 +27,12 @@ module.exports = function genericPut (req, res, next) {
       } else {
         record.update(data).then(() => {
           res.status(200)
+          res.body = JSON.stringify(record, (k, v) => {
+            if (v === undefined) {
+              return null
+            }
+            return v
+          })
           next()
           return Promise.resolve()
         }).catch(e => {
