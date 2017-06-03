@@ -36,11 +36,11 @@ module.exports = function genericGet (req, res, next) {
   }
 
   if (req.all.order) {
-    opts.order = req.all.order
+    opts.order = JSON.parse(req.all.order)
   }
 
   if (req.all.group) {
-    opts.group = req.all.group
+    opts.group = JSON.parse(req.all.group)
   }
 
   g.store[collection].findAll(opts).then(records => {
