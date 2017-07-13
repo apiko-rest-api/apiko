@@ -410,8 +410,8 @@ module.exports = function (g) {
             if (endpoint.ownership === true) {
               req.checkOwnership = true
             } else {
-              g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict.join(', '))
-              res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict.join(', '), 9)
+              g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict)
+              res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict, 9)
             }
           }
         }
