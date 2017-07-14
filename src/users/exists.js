@@ -2,9 +2,14 @@
 module.exports = function genericGetOne (req, res, next) {
   let g = req.apiko
 
+  let username = String(req.all.username)
+  if (username.indexOf('@') !== -1) {
+    username = username.toLowerCase()
+  }
+
   g.store.users.findOne({
     where: {
-      username: req.all.username
+      username: username
     }
   })
   .then(user => {
