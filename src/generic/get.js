@@ -27,7 +27,6 @@ module.exports = function genericGet (req, res, next) {
   }
 
   if (req.all.limit) {
-    console.log(req.all.limit)
     opts.limit = parseInt(req.all.limit)
   }
 
@@ -36,21 +35,21 @@ module.exports = function genericGet (req, res, next) {
   }
 
   if (req.all.order) {
-    opts.order = req.all.order
+    opts.order = JSON.parse(req.all.order)
   }
 
   if (req.all.group) {
-    opts.group = req.all.group
+    opts.group = JSON.parse(req.all.group)
   }
 
   g.store[collection].findAll(opts).then(records => {
-    if (records.length) {
-      res.status(200)
-      res.body = JSON.stringify(records)
-    } else {
-      res.status(404)
-      res.body = JSON.stringify(records)
-    }
+    // if (records.length) {
+    res.status(200)
+    res.body = JSON.stringify(records)
+    // } else {
+    //   res.status(404)
+    //   res.body = JSON.stringify(records)
+    // }
 
     next()
     return Promise.resolve()

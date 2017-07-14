@@ -19,6 +19,7 @@ module.exports = function genericDelete (req, res, next) {
       res.setError(404, 'No such file.', 10)
       next()
     }
+    next()
     return Promise.resolve()
   }).catch(e => {
     g.log.w(1, 'Error deleting a record in the DB (1):', e)

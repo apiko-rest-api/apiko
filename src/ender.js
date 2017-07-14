@@ -59,12 +59,44 @@ module.exports = function (g) {
           g.log.w(2, 'Endpoint ', i, 'is registered with no handler! (1)')
           this.addHandling(i, require('./empty-handler'))
         }
+      }
 
+      g.log(2, 'Adding custom endpoint handlers...')
+
+      for (let i in g.app.customEnds) {
+        if (g.app.customEnds[i].params) {
+          g.ender.on(g.app.customEnds[i].route, g.app.customEnds[i].handler, g.app.customEnds[i].params)
+        } else {
+          g.ender.on(g.app.customEnds[i].route, g.app.customEnds[i].handler)
+        }
+        this.addHandling(g.app.customEnds[i].route, g.ender.endIfNotEnded)
+      }
+
+      g.log(2, 'Adding end to all endpoints')
+      for (let i in this.endpoints) {
+        route = i.split(' ')
+        let method = route[0].toLowerCase()
+        route = g.config.prefixed(route[1])
         // a checker that eventually sends the response if nothing else in the chain does
         g.exApp[method](route, g.ender.endIfNotEnded)
       }
 
       g.log(2, 'Core and generic endpoints set up.')
+    },
+
+    automaticEndResponse () {
+      // merge generic, core and user endpoints, override: generic <- core <- user
+      this.endpoints = deepmerge.all([this.genericCollectionEndpoints(), g.core.endpoints, g.manager.setup.endpoints])
+
+      // register all endpoint handlers
+      let route
+      for (let i in this.endpoints) {
+        route = i.split(' ')
+        let method = route[0].toLowerCase()
+        route = g.config.prefixed(route[1])
+        // a checker that eventually sends the response if nothing else in the chain does
+        g.exApp[method](route, g.ender.endIfNotEnded)
+      }
     },
 
     addHandling (end, handler) {
@@ -378,8 +410,8 @@ module.exports = function (g) {
             if (endpoint.ownership === true) {
               req.checkOwnership = true
             } else {
-              g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict.join(', '))
-              res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict.join(', '), 9)
+              g.log.w(1, "This user doesn't seem to have sufficient rights. One of either is required:", endpoint.restrict)
+              res.error(403, "This user doesn't seem to have sufficient rights. One of either is required: " + endpoint.restrict, 9)
             }
           }
         }
@@ -391,7 +423,7 @@ module.exports = function (g) {
       }
     },
 
-    endIfNotEnded (req, res, next) {
+    endIfNotEnded (req, res) {
       if (!res.headersSent) {
         g.log(2, 'Automatically ending the response...')
 
