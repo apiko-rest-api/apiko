@@ -5,8 +5,13 @@ module.exports = function (req, res, next) {
   g.log(2, 'Registering a user...')
   let password = g.app.hashPassword(req.all.password)
 
+  let username = String(req.all.username)
+  if (username.indexOf('@') !== -1) {
+    username = username.toLowerCase()
+  }
+
   let defaults = {
-    where: { username: req.all.username },
+    where: { username: username },
     defaults: { password: password, name: req.all.name }
   }
 
