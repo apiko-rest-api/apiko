@@ -5,8 +5,12 @@ module.exports = function (req, res, next) {
   let g = req.apiko
 
   // let password = g.app.hashPassword(req.all.password) // unused
+  let username = String(req.all.username)
+  if (username.indexOf('@') !== -1) {
+    username = username.toLowerCase()
+  }
 
-  g.store.users.findOne({ where: { username: req.all.username } }).then((user) => {
+  g.store.users.findOne({ where: { username: username } }).then((user) => {
     if (user) {
       if (bcrypt.compareSync(req.all.password, user.password)) {
         let plainUser = JSON.parse(JSON.stringify(user))
