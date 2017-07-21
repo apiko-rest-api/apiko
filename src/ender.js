@@ -400,9 +400,13 @@ module.exports = function (g) {
           let userRoles = req.session.user.role.split(',')
 
           let hasOne = false
-          for (let i in endpoint.restrict.split(',')) {
-            if (userRoles.indexOf(endpoint.restrict[i]) >= 0) {
-              hasOne = true
+          for (let i in userRoles) {
+            if (userRoles.hasOwnProperty(i)) {
+              let role = userRoles[i]
+              if (endpoint.restrict.indexOf(role) >= 0) {
+                hasOne = true
+                break
+              }
             }
           }
 
