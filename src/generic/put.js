@@ -1,4 +1,28 @@
 'use strict'
+
+function isRestrict (req, column) {
+  try {
+    const params = req.apiko.ender.endpoints[req.apiko.ender.endFromReq(req)].params
+    let restrict
+    if (!(params && params[column] && (restrict = params[column].restrict))) return false
+
+    if (!(req.session && req.session.user && req.session.user.role)) return true
+    const userRoles = req.session.user.role.split(',')
+    const allowedToRoles = restrict.split(',')
+    let isRestrictToUser = true
+    for (let role in allowedToRoles) {
+      if (userRoles.indexOf(role) > -1) {
+        isRestrictToUser = false
+        break
+      }
+    }
+    return isRestrictToUser
+  } catch (error) {
+    req.apiko.log(1, 'Internal server error: ' + error.message)
+    return false
+  }
+}
+
 module.exports = function genericPut (req, res, next) {
   let g = req.apiko
 
@@ -13,6 +37,7 @@ module.exports = function genericPut (req, res, next) {
   let data = {}
   for (let column in g.data.collections[collection]) {
     if (column !== 'id') {
+      if (isRestrict(req, column)) continue
       data[column] = req.all[column]
     }
   }
