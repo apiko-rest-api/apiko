@@ -392,6 +392,7 @@ module.exports = function (g) {
         if (!req.session.user) {
           g.log.w(1, 'This endpoint requires login.')
           res.error(401, 'This endpoint requires login.', 8)
+          return
         }
 
         if (endpoint.restrict === true) {
