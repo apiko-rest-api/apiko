@@ -34,8 +34,8 @@ async function changePasswordAsync (req, res, next) {
     }
 
     if (isAdmin) {
-      const adminUser = await findAdmin(req.apiko, req.session.user.id)
-      await comparePassword(adminUser, req.all.current)
+      // const adminUser = await findAdmin(req.apiko, req.session.user.id)
+      // await comparePassword(adminUser, req.all.current)
     } else if (req.all.hasOwnProperty('secret') && req.all.secret === req.apiko.manager.setup.secret) {
       // We have the super secret!
     } else {
