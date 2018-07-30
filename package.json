@@ -118,7 +118,7 @@
   },
   "scripts": {
     "lint": "eslint src test index.js --quiet",
-    "test": "mocha --require test/support/env --reporter spec --bail --check-leaks test/ --timeout 15000"
+    "test": "mocha --require test/support/env --reporter spec --bail test/ --timeout 15000"
   },
   "version": "0.2.0"
 }
